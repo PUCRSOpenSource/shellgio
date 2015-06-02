@@ -30,6 +30,7 @@ int main(int argc, const char *argv[])
         //Root block
         uint8_t root_block[BLOCK_SIZE];
 
+        //Initialize root_block
         for (counter = 0; counter < BLOCK_SIZE; counter++) {
                 root_block[counter] = 0xbb;
         }
