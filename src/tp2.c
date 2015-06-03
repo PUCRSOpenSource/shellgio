@@ -33,7 +33,8 @@ uint8_t root_dir[BLOCK_SIZE];
 //Data cluster
 uint8_t cluster[BLOCK_SIZE];
 
-int main(int argc, const char *argv[])
+int
+main(int argc, const char *argv[])
 {
         int i;
 
