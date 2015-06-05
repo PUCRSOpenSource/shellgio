@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <string.h>
 
 #define FAT_SIZE 4096
 #define BLOCK_SIZE 1024
@@ -8,7 +9,6 @@
 #define FILE_NAME_SIZE 8
 #define RESERVED_SIZE 7
 
-uint16_t fat[FAT_SIZE];
 
 typedef struct {
         uint8_t  filename[FILE_NAME_SIZE];
@@ -18,23 +18,16 @@ typedef struct {
         uint32_t size;
 } dir_entry_t;
 
+uint16_t fat[FAT_SIZE];
 dir_entry_t dir[32];
-
 uint8_t data_block[BLOCK_SIZE];
-
 FILE *ptr_myfat;
-
-//Root block
 uint8_t root_block[BLOCK_SIZE];
-
-//Root dir
 uint8_t root_dir[BLOCK_SIZE];
-
-//Data cluster
 uint8_t cluster[BLOCK_SIZE];
 
-int
-main(int argc, const char *argv[])
+void
+initializeFat(void)
 {
         int i;
 
@@ -85,6 +78,11 @@ main(int argc, const char *argv[])
 
 
         fclose(ptr_myfat);
+}
 
+int
+main(int argc, const char *argv[])
+{
+        initializeFat();
         return 0;
 }
