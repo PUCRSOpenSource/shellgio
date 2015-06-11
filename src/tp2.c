@@ -22,7 +22,7 @@ typedef struct {
 uint16_t fat[FAT_SIZE];
 dir_entry_t dir[32];
 uint8_t data_block[BLOCK_SIZE];
-FILE *ptr_myfat;
+FILE* ptr_myfat;
 uint8_t root_block[BLOCK_SIZE];
 uint8_t root_dir[BLOCK_SIZE];
 uint8_t cluster[BLOCK_SIZE];
