@@ -90,8 +90,11 @@ int
 load(void)
 { 
         ptr_myfat = fopen("fat.part", "rb"); 
+
         if (!ptr_myfat)
+        {
                 return 1;
+        }
 
         fseek(ptr_myfat, 1024, SEEK_SET);
         fread(&fat, sizeof(fat), 1, ptr_myfat);
@@ -109,7 +112,11 @@ int
 main(int argc, const char *argv[])
 {
         if (FORMAT)
+        {
                 init();
+        }
+
         load();
+
         return 0;
 }
