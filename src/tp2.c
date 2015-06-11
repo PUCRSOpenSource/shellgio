@@ -8,6 +8,7 @@
 #define DATA_CLUSTERS 4086
 #define FILE_NAME_SIZE 8
 #define RESERVED_SIZE 7
+#define FORMAT 0
 
 
 typedef struct {
@@ -26,12 +27,15 @@ uint8_t root_block[BLOCK_SIZE];
 uint8_t root_dir[BLOCK_SIZE];
 uint8_t cluster[BLOCK_SIZE];
 
-void
-initializeFat(void)
+int
+init(void)
 {
         int i;
 
         ptr_myfat = fopen("fat.part","wb");
+
+        if (!ptr_myfat)
+                return 1;
 
 
         //Initialize root_block
@@ -78,11 +82,34 @@ initializeFat(void)
 
 
         fclose(ptr_myfat);
+
+        return 0;
+}
+
+int
+load(void)
+{ 
+        ptr_myfat = fopen("fat.part", "rb"); 
+        if (!ptr_myfat)
+                return 1;
+
+        fseek(ptr_myfat, 1024, SEEK_SET);
+        fread(&fat, sizeof(fat), 1, ptr_myfat);
+
+        fclose(ptr_myfat);
+}
+
+int
+mkdir(void)
+{
+        return 0;
 }
 
 int
 main(int argc, const char *argv[])
 {
-        initializeFat();
+        if (FORMAT)
+                init();
+        load();
         return 0;
 }
