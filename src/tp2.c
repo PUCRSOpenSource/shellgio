@@ -102,9 +102,17 @@ load(void)
         fclose(ptr_myfat);
 }
 
-int
-mkdir(void)
+uint16_t*
+freeFat(void)
 {
+        int i;
+        for (i = 10; i < FAT_SIZE; i++)
+        {
+                if (fat[i] == 0)
+                {
+                        return &fat[i];
+                }
+        }
         return 0;
 }
 
@@ -117,6 +125,9 @@ main(int argc, const char *argv[])
         }
 
         load();
+        uint16_t* bla = freeFat();
+        printf("%d\n", bla);
+        printf("%d\n", *bla);
 
         return 0;
 }
