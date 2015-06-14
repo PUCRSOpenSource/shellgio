@@ -8,7 +8,6 @@
 #define DATA_CLUSTERS 4086
 #define FILE_NAME_SIZE 8
 #define RESERVED_SIZE 7
-#define FORMAT 1
 
 typedef enum{false, true} bool;
 
@@ -165,35 +164,52 @@ mkdir(void)
         uint16_t* fFat = freeFat();
 }
 
+void
+help(void)
+{
+        printf("init                       - initialize file system, format disk\n");
+        printf("load                       - load file allocation table\n");
+        printf("ls [/caminho/diretorio]    - list directory\n");
+        printf("mkdir [/caminho/diretorio] - make directory\n");
+        printf("rmdir [/caminho/diretorio] - remove directory\n");
+        printf("create [/caminho/arquivo]  - create file\n");
+        printf("rm [/caminho/arquivo]      - remove file\n");
+        printf("write  [/caminho/arquivo]  - write data in file\n");
+        printf("cat [/caminho/arquivo]     - concatenate files and print on the standard output\n");
+        printf("exit                       - exit shell\n");
+}
+
 int
 main(int argc, const char *argv[])
 {
-        /*if (FORMAT)*/
-        /*{*/
-                /*init();*/
-        /*}*/
+        help();
 
         while (true)
         {
                 char command[4096];
                 fgets(command,96,stdin);
                 const char* delimiter = "/";
-                char *cm;
+                char* cm;
                 cm = rtrim(ltrim(strtok (command, delimiter)));
                 
-                if(strcmp(cm, "init") == 0)
+                if (strcmp(cm, "init") == 0)
                 {
                         init();
                 }
                 
-                if(strcmp(cm, "load") == 0)
+                if (strcmp(cm, "load") == 0)
                 {
                         load();
                 }
                 
-                if(strcmp(cm, "exit") == 0)
+                if (strcmp(cm, "exit") == 0)
                 {
                         return 0;
+                }
+                
+                if (strcmp(cm, "help"))
+                {
+                        help();
                 }
         }
 
