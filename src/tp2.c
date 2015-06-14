@@ -190,7 +190,7 @@ main(int argc, const char *argv[])
                 fgets(command,96,stdin);
                 const char* delimiter = "/";
                 char* cm;
-                cm = rtrim(ltrim(strtok (command, delimiter)));
+                cm = rtrim(ltrim(strtok(command, delimiter)));
                 
                 if (strcmp(cm, "init") == 0)
                 {
