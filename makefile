@@ -5,6 +5,7 @@ all: tp2
 
 run: tp2
 	./tp2
+	hexdump fat.part
 
 tp2: $(SDIR)/tp2.c
 	$(CC) $^ -o $@
