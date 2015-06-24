@@ -207,7 +207,7 @@ main(int argc, const char *argv[])
                         return 0;
                 }
                 
-                if (strcmp(cm, "help"))
+                if (strcmp(cm, "help") == 0)
                 {
                         help();
                 }
