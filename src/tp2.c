@@ -2,14 +2,13 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
+#include <ctype.h>
 
 #define FAT_SIZE 4096
 #define BLOCK_SIZE 1024
 #define DATA_CLUSTERS 4086
 #define FILE_NAME_SIZE 8
 #define RESERVED_SIZE 7
-
-typedef enum{false, true} bool;
 
 typedef struct {
 	uint8_t  filename[FILE_NAME_SIZE];
@@ -133,16 +132,18 @@ updateFat(void)
 
 	if (!ptr_myfat)
 	{
-		return 1;
+		printf("Couldn't open fat!\n");
 	}
-
-	fseek(ptr_myfat, 1024, SEEK_SET);
-	fwrite(&fat, sizeof(fat), 1, ptr_myfat);
+	else
+	{
+		fseek(ptr_myfat, 1024, SEEK_SET);
+		fwrite(&fat, sizeof(fat), 1, ptr_myfat);
+	}
 
 	fclose(ptr_myfat);
 }
 
-uint16_t*
+int
 freeFat(void)
 {
 	int i;
@@ -161,7 +162,8 @@ freeFat(void)
 int
 mkdir(void)
 {
-	uint16_t* fFat = freeFat();
+	int fFat = freeFat();
+	printf("%d\n", fFat);
 }
 
 void
@@ -184,7 +186,7 @@ main(int argc, const char *argv[])
 {
 	help();
 
-	while (true)
+	while (1)
 	{
 		char command[4096];
 		fgets(command,96,stdin);
@@ -200,6 +202,11 @@ main(int argc, const char *argv[])
 		if (strcmp(cm, "load") == 0)
 		{
 			load();
+		}
+
+		if (strcmp(cm, "mkdir") == 0)
+		{
+			mkdir();
 		}
 
 		if (strcmp(cm, "exit") == 0)
