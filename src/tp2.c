@@ -22,7 +22,7 @@ uint16_t fat[FAT_SIZE];
 dir_entry_t dir[32];
 uint8_t data_block[BLOCK_SIZE];
 FILE* ptr_myfat;
-uint8_t root_block[BLOCK_SIZE];
+uint8_t boot_block[BLOCK_SIZE];
 uint8_t root_dir[BLOCK_SIZE];
 uint8_t cluster[BLOCK_SIZE];
 
@@ -61,14 +61,14 @@ init(void)
 		return 1;
 
 
-	//Initialize root_block
+	//Initialize boot_block
 	for (i = 0; i < BLOCK_SIZE; i++)
 	{
-		root_block[i] = 0xbb;
+		boot_block[i] = 0xbb;
 	}
 
-	//Write root_block
-	fwrite(&root_block, sizeof(root_block), 1, ptr_myfat);
+	//Write boot_block
+	fwrite(&boot_block, sizeof(boot_block), 1, ptr_myfat);
 
 
 	//Initialize fat
