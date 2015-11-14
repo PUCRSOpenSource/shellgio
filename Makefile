@@ -1,17 +1,31 @@
+IDIR = ./include
 SDIR = ./src
+ODIR = ./obj
+
 CC = gcc
+CFLAGS = -Wall -g -I$(IDIR)
 
-all: tp2
+_DEPS = fat.h shell.h
+DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-run: tp2
-	./tp2
-	hexdump fat.part
+_OBJ = fat.o shell.o main.o
+OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
-tp2: $(SDIR)/tp2.c
+all: main
+
+$(ODIR)/%.o: $(SDIR)/%.c $(DEPS)
+	$(CC) -c -o $@ $< $(CFLAGS)
+
+main: $(OBJ)
 	$(CC) $^ -o $@
 
 .PHONY: clean
 
 clean:
 	rm -f fat.part
-	rm -f tp2
+	rm -f $(ODIR)/*.o
+	rm -rf main
+
+run: main
+	./main
+	hexdump fat.part
