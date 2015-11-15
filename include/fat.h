@@ -25,8 +25,9 @@ uint8_t boot_block[BLOCK_SIZE];
 uint8_t root_dir[BLOCK_SIZE];
 uint8_t cluster[BLOCK_SIZE];
 
+int get_free_address(void);
 int init(void);
 int load(void);
+int load_cluster(int address);
 void update_fat(void);
-int free_fat(void);
 int mkdir(void);

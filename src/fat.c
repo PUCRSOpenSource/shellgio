@@ -109,24 +109,6 @@ print_fat(void)
 }
 
 int
-free_fat(void)
-{
-	int i;
-	for (i = 10; i < FAT_SIZE; i++)
-	{
-		if (fat[i] == 0)
-		{
-			print_fat();
-			fat[i] = i;
-			update_fat();
-			print_fat();
-			return fat[i];
-		}
-	}
-	return -1;
-}
-
-int
 get_free_address(void)
 {
 	int i;
