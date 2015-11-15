@@ -145,31 +145,31 @@ get_free_address(void)
 int 
 load_cluster(int address)
 {
-	ptr_myfat = fopen("fat.part", "r+b");
+	// ptr_myfat = fopen("fat.part", "r+b");
 
-	printf("%d\n", address * BLOCK_SIZE);
-	fseek(ptr_myfat, address * BLOCK_SIZE, SEEK_SET);
-	int teste = 0x666;
-	int* ptr = &teste;
-	fwrite(ptr, sizeof(teste), 1, ptr_myfat);
-	fclose(ptr_myfat);
-	return 0;
+	// printf("%d\n", address * BLOCK_SIZE);
+	// fseek(ptr_myfat, address * BLOCK_SIZE, SEEK_SET);
+	// union data_cluster teste;
+	// // teste = malloc(sizeof(union data_cluster));
+	// teste.data[0] = 0xaaaa;
+	// int* ptr = &teste;
+	// fwrite(ptr, sizeof(teste), 1, ptr_myfat);
+	// fclose(ptr_myfat);
+	// return 0;
 }
 
 int
 mkdir(void)
 {
-	int address = get_free_address();
-	// printf("%d\n", address);
-	load_cluster(address);
+	//parse path
+	//find directory
+	//write to directory
+	//find free address
+	//write data to free cluster
 
-	// ptr_myfat = fopen("fat.part", "r+b");
-	// int teste = 666;
-	// int* ptr = &teste;
-	// fwrite(ptr, sizeof(teste), 1, ptr_myfat);
-	// fclose(ptr_myfat);
-	// int fFat = free_fat();
-	// printf("%d\n", fFat);
+	int address = get_free_address();
+
+	load_cluster(address);
 
 	return 0;
 }
