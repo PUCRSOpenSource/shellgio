@@ -14,10 +14,10 @@ typedef struct {
 	uint32_t size;
 } dir_entry_t;
 
- union {
+ union data_cluster{
 	dir_entry_t dir[BLOCK_SIZE / sizeof(dir_entry_t)];
 	uint8_t data[BLOCK_SIZE];
-} data_cluster;
+};
 
 uint16_t fat[FAT_SIZE];
 FILE* ptr_myfat;

@@ -127,17 +127,15 @@ get_free_address(void)
 int 
 load_cluster(int address)
 {
-	// ptr_myfat = fopen("fat.part", "r+b");
+	 ptr_myfat = fopen("fat.part", "r+b");
 
-	// printf("%d\n", address * BLOCK_SIZE);
-	// fseek(ptr_myfat, address * BLOCK_SIZE, SEEK_SET);
-	// union data_cluster teste;
-	// // teste = malloc(sizeof(union data_cluster));
-	// teste.data[0] = 0xaaaa;
-	// int* ptr = &teste;
-	// fwrite(ptr, sizeof(teste), 1, ptr_myfat);
-	// fclose(ptr_myfat);
-	// return 0;
+	 printf("%d\n", address * BLOCK_SIZE);
+	 fseek(ptr_myfat, address * BLOCK_SIZE, SEEK_SET);
+	 union data_cluster teste = { .data[0] = 0xaaaa };
+	 int* ptr = &teste;
+	 fwrite(ptr, sizeof(teste), 1, ptr_myfat);
+	 fclose(ptr_myfat);
+	 return 0;
 }
 
 int
