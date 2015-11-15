@@ -134,7 +134,7 @@ get_free_address(void)
 	{
 		if (fat[i] == 0)
 		{
-			// fat[i] = 1;
+			fat[i] = 1;
 			update_fat();
 			return i;
 		}

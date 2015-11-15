@@ -28,4 +28,4 @@ clean:
 
 run: main
 	./main
-	hexdump fat.part
+	hexdump -x fat.part
