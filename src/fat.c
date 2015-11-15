@@ -81,7 +81,7 @@ load(void)
 void
 update_fat(void)
 {
-	ptr_myfat = fopen("fat.part", "r+b"); 
+	ptr_myfat = fopen("fat.part", "r+b");
 
 	if (!ptr_myfat)
 	{
@@ -96,6 +96,18 @@ update_fat(void)
 	fclose(ptr_myfat);
 }
 
+static void
+print_fat(void)
+{
+	printf("[ ");
+	int i;
+	for (int i = 0; i < FAT_SIZE; ++i)
+	{
+			printf("%d ", fat[i]);
+	}
+	printf("]\n");
+}
+
 int
 free_fat(void)
 {
@@ -104,8 +116,10 @@ free_fat(void)
 	{
 		if (fat[i] == 0)
 		{
+			print_fat();
 			fat[i] = i;
 			update_fat();
+			print_fat();
 			return fat[i];
 		}
 	}
@@ -113,10 +127,49 @@ free_fat(void)
 }
 
 int
+get_free_address(void)
+{
+	int i;
+	for (i = 10; i < FAT_SIZE; i++)
+	{
+		if (fat[i] == 0)
+		{
+			// fat[i] = 1;
+			update_fat();
+			return i;
+		}
+	}
+	return -1;
+}
+
+int 
+load_cluster(int address)
+{
+	ptr_myfat = fopen("fat.part", "r+b");
+
+	printf("%d\n", address * BLOCK_SIZE);
+	fseek(ptr_myfat, address * BLOCK_SIZE, SEEK_SET);
+	int teste = 0x666;
+	int* ptr = &teste;
+	fwrite(ptr, sizeof(teste), 1, ptr_myfat);
+	fclose(ptr_myfat);
+	return 0;
+}
+
+int
 mkdir(void)
 {
-	int fFat = free_fat();
-	printf("%d\n", fFat);
+	int address = get_free_address();
+	// printf("%d\n", address);
+	load_cluster(address);
+
+	// ptr_myfat = fopen("fat.part", "r+b");
+	// int teste = 666;
+	// int* ptr = &teste;
+	// fwrite(ptr, sizeof(teste), 1, ptr_myfat);
+	// fclose(ptr_myfat);
+	// int fFat = free_fat();
+	// printf("%d\n", fFat);
 
 	return 0;
 }

@@ -14,9 +14,12 @@ typedef struct {
 	uint32_t size;
 } dir_entry_t;
 
+union {
+	dir_entry_t dir[BLOCK_SIZE / sizeof(dir_entry_t)];
+	uint8_t data[BLOCK_SIZE];
+} data_cluster;
+
 uint16_t fat[FAT_SIZE];
-dir_entry_t dir[32];
-uint8_t data_block[BLOCK_SIZE];
 FILE* ptr_myfat;
 uint8_t boot_block[BLOCK_SIZE];
 uint8_t root_dir[BLOCK_SIZE];
