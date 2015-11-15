@@ -101,7 +101,7 @@ print_fat(void)
 {
 	printf("[ ");
 	int i;
-	for (int i = 0; i < FAT_SIZE; ++i)
+	for (i = 0; i < FAT_SIZE; ++i)
 	{
 			printf("%d ", fat[i]);
 	}
@@ -131,9 +131,8 @@ load_cluster(int address)
 
 	 printf("%d\n", address * BLOCK_SIZE);
 	 fseek(ptr_myfat, address * BLOCK_SIZE, SEEK_SET);
-	 union data_cluster teste = { .data[0] = 0xaaaa };
-	 int* ptr = &teste;
-	 fwrite(ptr, sizeof(teste), 1, ptr_myfat);
+	 union data_cluster teste = { .data[0] = 0xaa };
+	 fwrite(&teste, sizeof(teste), 1, ptr_myfat);
 	 fclose(ptr_myfat);
 	 return 0;
 }
