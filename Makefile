@@ -2,6 +2,8 @@ IDIR = ./include
 SDIR = ./src
 ODIR = ./obj
 
+OS := $(shell uname)
+
 CC = gcc
 CFLAGS = -Wall -g -I$(IDIR)
 
@@ -26,6 +28,12 @@ clean:
 	rm -f $(ODIR)/*.o
 	rm -rf main
 
+ifeq ($(OS), Darwin)
 run: main
 	./main
 	hexdump -x fat.part
+else
+run: main
+	./main
+	hexdump fat.part
+endif
