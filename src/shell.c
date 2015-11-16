@@ -6,12 +6,11 @@
 #include <shell.h>
 
 static char**
-parse_command(char* str)
+parse_command(char* str, int* size)
 {
 	/*char    str[]= "/home/matthias/repos/t2sisop";*/
 	char ** res  = NULL;
 	char *  p    = strtok (str, "/");
-	printf("Size of %s: %d\n", p, strlen(p));
 	int n_spaces = 0;
 
 
@@ -29,6 +28,7 @@ parse_command(char* str)
 		res[n_spaces-1] = aux;
 
 		p = strtok (NULL, "/");
+		(*size)++;
 	}
 
 	/* realloc one extra element for the last NULL */
@@ -47,6 +47,15 @@ parse_command(char* str)
 	/*free (res);*/
 
 	return res;
+}
+
+static void
+free_command_array(char** command, int size)
+{
+	int i;
+	for (i = 0; i < size; i++)
+		free(command[i]);
+	free(command);
 }
 
 /*static char**/
@@ -93,14 +102,15 @@ start_shell(void)
 {
 	/*help();*/
 	char str[] = "/home/matthias/repos/t2sisop";
-	char** res = parse_command(str);
+	int command_size = 0;
+	char** res = parse_command(str, &command_size);
 
-	printf("%s\n", *res);
-	printf("%s\n", *(res + 1));
-	printf("%s\n", *(res + 2));
-	printf("%s\n", *(res + 3));
+	int i;
+	for (i = 0; i < command_size; i++) {
+		printf("%s : %d\n", res[i], command_size);
+	}
 
-	free(res);
+	free_command_array(res, command_size);
 
 	/*while (1)*/
 	/*{*/
