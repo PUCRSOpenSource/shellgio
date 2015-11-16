@@ -1,32 +1,77 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 #include <fat.h>
 #include <shell.h>
 
-static char*
-ltrim(char* s)
+static char**
+parse_command(char* str)
 {
-	if(s==NULL)
-	{
-		return s;
+	/*char    str[]= "/home/matthias/repos/t2sisop";*/
+	char ** res  = NULL;
+	char *  p    = strtok (str, "/");
+	printf("Size of %s: %d\n", p, strlen(p));
+	int n_spaces = 0;
+
+
+	/* split string and append tokens to 'res' */
+
+	while (p) {
+		res = realloc (res, sizeof (char*) * ++n_spaces);
+
+		if (res == NULL)
+			exit (-1); /* memory allocation failed */
+
+		char* aux = malloc(sizeof(char*) * strlen(p) + 1);
+		strcpy(aux, p);
+
+		res[n_spaces-1] = aux;
+
+		p = strtok (NULL, "/");
 	}
-	while(isspace(*s)) s++;
-	return s;
+
+	/* realloc one extra element for the last NULL */
+
+	res = realloc (res, sizeof (char*) * (n_spaces+1));
+	res[n_spaces] = 0;
+
+	/* print the result */
+
+	/*int i;*/
+	/*for (i = 0; i < (n_spaces+1); ++i)*/
+		/*printf ("res[%d] = %s\n", i, res[i]);*/
+
+	/* free the memory allocated */
+
+	/*free (res);*/
+
+	return res;
 }
 
-static char*
-rtrim(char* s)
-{
-	if(s==NULL)
-	{
-		return s;
-	}
-	char* back = s + strlen(s);
-	while(isspace(*--back));
-	*(back+1) = '\0';
-	return s;
-}
+/*static char**/
+/*ltrim(char* s)*/
+/*{*/
+	/*if(s==NULL)*/
+	/*{*/
+		/*return s;*/
+	/*}*/
+	/*while(isspace(*s)) s++;*/
+	/*return s;*/
+/*}*/
+
+/*static char**/
+/*rtrim(char* s)*/
+/*{*/
+	/*if(s==NULL)*/
+	/*{*/
+		/*return s;*/
+	/*}*/
+	/*char* back = s + strlen(s);*/
+	/*while(isspace(*--back));*/
+	/**(back+1) = '\0';*/
+	/*return s;*/
+/*}*/
 
 void
 help(void)
@@ -46,44 +91,53 @@ help(void)
 int
 start_shell(void)
 {
-	help();
+	/*help();*/
+	char str[] = "/home/matthias/repos/t2sisop";
+	char** res = parse_command(str);
 
-	while (1)
-	{
-		char command[4096];
-		fgets(command,96,stdin);
-		const char* delimiter = "/";
-		char* cm;
-		cm = rtrim(ltrim(strtok(command, delimiter)));
+	printf("%s\n", *res);
+	printf("%s\n", *(res + 1));
+	printf("%s\n", *(res + 2));
+	printf("%s\n", *(res + 3));
 
-		if (strcmp(cm, "init") == 0)
-		{
-			init();
-		}
+	free(res);
 
-		if (strcmp(cm, "load") == 0)
-		{
-			load();
-		}
+	/*while (1)*/
+	/*{*/
+		/*char command[4096];*/
+		/*fgets(command,96,stdin);*/
+		/*const char* delimiter = "/";*/
+		/*char* cm;*/
+		/*cm = rtrim(ltrim(strtok(command, delimiter)));*/
 
-		if (strcmp(cm, "mkdir") == 0)
-		{
-			mkdir();
-		}
+		/*if (strcmp(cm, "init") == 0)*/
+		/*{*/
+			/*init();*/
+		/*}*/
 
-		if (strcmp(cm, "exit") == 0)
-		{
-			return 0;
-		}
+		/*if (strcmp(cm, "load") == 0)*/
+		/*{*/
+			/*load();*/
+		/*}*/
 
-		if (strcmp(cm, "help") == 0)
-		{
-			help();
-		}
-	}
+		/*if (strcmp(cm, "mkdir") == 0)*/
+		/*{*/
+			/*mkdir();*/
+		/*}*/
 
-	int i = mkdir();
-	printf("%d\n", i);
+		/*if (strcmp(cm, "exit") == 0)*/
+		/*{*/
+			/*return 0;*/
+		/*}*/
+
+		/*if (strcmp(cm, "help") == 0)*/
+		/*{*/
+			/*help();*/
+		/*}*/
+	/*}*/
+
+	/*int i = mkdir();*/
+	/*printf("%d\n", i);*/
 
 	return 0;
 }
