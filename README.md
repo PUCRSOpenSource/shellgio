@@ -112,6 +112,7 @@ Um pequeno *shell* deve ser implementado para a manipulação do sistema de
 arquivos. Este shell deve oferecer recursos  para  a  carga  do  sistema  de
 arquivos  e  manipulação  de  diretórios  e  arquivos. Os  seguintes  comandos
 devem ser implementados no shell:
+
 * `init`  -  inicializar  o  sistema  de  arquivos  com  as  estruturas  de
 	dados, semelhante a formatar o sistema de arquivos virtual
 * load - carregar o sistema de arquivos do disco
