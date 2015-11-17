@@ -134,9 +134,9 @@ load_cluster(int address)
 }
 
 int
-mkdir(void)
+mkdir(char** path, int size)
 {
-	char dir_name[] = "dir";
+	/*char dir_name[] = "dir";*/
 
 	// Load addresses
 	int address = get_free_address();
@@ -152,9 +152,11 @@ mkdir(void)
 		if (root_cluster.dir[i].attributes != 1 && root_cluster.dir[i].attributes != 2)
 		{
 			int j;
-			for(j = 0; j < strlen(dir_name); j++) 
+			/*for(j = 0; j < strlen(dir_name); j++) */
+			for(j = 0; j < strlen(path[1]); j++) 
 			{
-				root_cluster.dir[i].filename[j] = dir_name[j];
+				/*root_cluster.dir[i].filename[j] = dir_name[j];*/
+				root_cluster.dir[i].filename[j] = path[1][j];
 			}
 			root_cluster.dir[i].attributes = 1;
 			root_cluster.dir[i].first_block = address;

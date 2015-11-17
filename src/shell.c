@@ -91,13 +91,13 @@ start_shell(void)
 		char command[4096];
 		fgets(command,96,stdin);
 
-		int directory_depth = 0;
-		char** res = parse_command(command, &directory_depth);
+		int path_depth = 0;
+		char** res = parse_command(command, &path_depth);
 
 		int i;
-		for (i = 0; i < directory_depth; i++)
+		for (i = 0; i < path_depth; i++)
 			printf("res[%d]: %s\n", i, res[i]);
-		printf("Size: %d\n", directory_depth);
+		printf("Size: %d\n", path_depth);
 
 		res[0] = rtrim(ltrim(res[0]));
 
@@ -113,7 +113,7 @@ start_shell(void)
 
 		if (strcmp(res[0], "mkdir") == 0)
 		{
-			mkdir();
+			mkdir(res, path_depth);
 		}
 
 		if (strcmp(res[0], "exit") == 0)
@@ -131,7 +131,7 @@ start_shell(void)
 			ls();
 		}
 
-		free_command_array(res, directory_depth);
+		free_command_array(res, path_depth);
 	}
 
 	return 0;
