@@ -143,7 +143,11 @@ int check_directory_entry(char* name, int address)
 		if (root_cluster.dir[i].attributes == 1 && strcmp((const char*)root_cluster.dir[i].filename, name) == 0)
 			return 0;
 
-	return 1;
+	for (i = 0; i < BLOCK_SIZE / sizeof(dir_entry_t); i++)
+		if (root_cluster.dir[i].attributes != 1 && root_cluster.dir[i].attributes != 2)
+			return 1;
+
+	return 0;
 }
 
 int
