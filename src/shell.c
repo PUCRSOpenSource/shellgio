@@ -8,19 +8,15 @@
 static char**
 parse_command(char* str, int* depth)
 {
-	/*char    str[]= "/home/matthias/repos/t2sisop";*/
-	char ** res  = NULL;
-	char *  p    = strtok (str, "/");
+	char** res  = NULL;
+	char*  p    = strtok (str, "/");
 	int n_spaces = 0;
-
-
-	/* split string and append tokens to 'res' */
 
 	while (p) {
 		res = realloc (res, sizeof (char*) * ++n_spaces);
 
 		if (res == NULL)
-			exit (-1); /* memory allocation failed */
+			exit (-1);
 
 		char* aux = malloc(sizeof(char*) * strlen(p) + 1);
 		strcpy(aux, p);
@@ -31,20 +27,8 @@ parse_command(char* str, int* depth)
 		(*depth)++;
 	}
 
-	/* realloc one extra element for the last NULL */
-
 	res = realloc (res, sizeof (char*) * (n_spaces+1));
 	res[n_spaces] = 0;
-
-	/* print the result */
-
-	/*int i;*/
-	/*for (i = 0; i < (n_spaces+1); ++i)*/
-		/*printf ("res[%d] = %s\n", i, res[i]);*/
-
-	/* free the memory allocated */
-
-	/*free (res);*/
 
 	return res;
 }
@@ -100,17 +84,7 @@ help(void)
 int
 start_shell(void)
 {
-	/*help();*/
-	char str[] = "/home/matthias/repos/t2sisop";
-	/*int directory_depth = 0;*/
-	/*char** res = parse_command(str, &directory_depth);*/
-
-	/*int i;*/
-	/*for (i = 0; i < directory_depth; i++)*/
-		/*printf("res[%d]: %s\n", i, res[i]);*/
-	/*printf("Size: %d\n", directory_depth);*/
-
-	/*free_command_array(res, directory_depth);*/
+	help();
 
 	while (1)
 	{
@@ -120,13 +94,12 @@ start_shell(void)
 		int directory_depth = 0;
 		char** res = parse_command(command, &directory_depth);
 
-		/*int i;*/
-		/*for (i = 0; i < directory_depth; i++)*/
-			/*printf("res[%d]: %s\n", i, res[i]);*/
-		/*printf("Size: %d\n", directory_depth);*/
+		int i;
+		for (i = 0; i < directory_depth; i++)
+			printf("res[%d]: %s\n", i, res[i]);
+		printf("Size: %d\n", directory_depth);
 
 		res[0] = rtrim(ltrim(res[0]));
-		printf("res[%d]: %s\n", 0, res[0]);
 
 		if (strcmp(res[0], "init") == 0)
 		{
