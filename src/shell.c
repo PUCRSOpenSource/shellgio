@@ -84,20 +84,19 @@ help(void)
 int
 start_shell(void)
 {
-	help();
-
 	while (1)
 	{
+		printf("Super Shell 2000: $");
 		char command[4096];
 		fgets(command,96,stdin);
 
 		int path_depth = 0;
 		char** res = parse_command(command, &path_depth);
 
-		int i;
-		for (i = 0; i < path_depth; i++)
-			printf("res[%d]: %s\n", i, res[i]);
-		printf("Size: %d\n", path_depth);
+		/*int i;*/
+		/*for (i = 0; i < path_depth; i++)*/
+			/*printf("res[%d]: %s\n", i, res[i]);*/
+		/*printf("Size: %d\n", path_depth);*/
 
 		res[0] = rtrim(ltrim(res[0]));
 
@@ -129,6 +128,16 @@ start_shell(void)
 		if (strcmp(res[0], "ls") == 0)
 		{
 			ls();
+		}
+
+		if (strcmp(res[0], "clear") == 0)
+		{
+			system("clear");
+		}
+
+		if (strcmp(res[0], "memprint") == 0)
+		{
+			system("hexdump fat.part");
 		}
 
 		free_command_array(res, path_depth);

@@ -185,7 +185,7 @@ ls(void)
 	{
 		if (root_cluster.dir[i].attributes == 1 || root_cluster.dir[i].attributes == 2) 
 		{
-			printf("%s\n", root_cluster.dir[i].filename);
+			printf("\t%s", root_cluster.dir[i].filename);
 		}
 	}
 
