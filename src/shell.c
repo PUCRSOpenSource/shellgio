@@ -126,6 +126,11 @@ start_shell(void)
 			help();
 		}
 
+		if (strcmp(res[0], "ls") == 0)
+		{
+			ls();
+		}
+
 		free_command_array(res, directory_depth);
 	}
 
