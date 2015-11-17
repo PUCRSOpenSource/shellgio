@@ -6,7 +6,7 @@
 #include <shell.h>
 
 static char**
-parse_command(char* str, int* size)
+parse_command(char* str, int* depth)
 {
 	/*char    str[]= "/home/matthias/repos/t2sisop";*/
 	char ** res  = NULL;
@@ -28,7 +28,7 @@ parse_command(char* str, int* size)
 		res[n_spaces-1] = aux;
 
 		p = strtok (NULL, "/");
-		(*size)++;
+		(*depth)++;
 	}
 
 	/* realloc one extra element for the last NULL */
@@ -58,29 +58,29 @@ free_command_array(char** command, int size)
 	free(command);
 }
 
-/*static char**/
-/*ltrim(char* s)*/
-/*{*/
-	/*if(s==NULL)*/
-	/*{*/
-		/*return s;*/
-	/*}*/
-	/*while(isspace(*s)) s++;*/
-	/*return s;*/
-/*}*/
+static char*
+ltrim(char* s)
+{
+	if(s==NULL)
+	{
+		return s;
+	}
+	while(isspace(*s)) s++;
+	return s;
+}
 
-/*static char**/
-/*rtrim(char* s)*/
-/*{*/
-	/*if(s==NULL)*/
-	/*{*/
-		/*return s;*/
-	/*}*/
-	/*char* back = s + strlen(s);*/
-	/*while(isspace(*--back));*/
-	/**(back+1) = '\0';*/
-	/*return s;*/
-/*}*/
+static char*
+rtrim(char* s)
+{
+	if(s==NULL)
+	{
+		return s;
+	}
+	char* back = s + strlen(s);
+	while(isspace(*--back));
+	*(back+1) = '\0';
+	return s;
+}
 
 void
 help(void)
@@ -102,52 +102,59 @@ start_shell(void)
 {
 	/*help();*/
 	char str[] = "/home/matthias/repos/t2sisop";
-	int command_size = 0;
-	char** res = parse_command(str, &command_size);
+	/*int directory_depth = 0;*/
+	/*char** res = parse_command(str, &directory_depth);*/
 
-	int i;
-	for (i = 0; i < command_size; i++) {
-		printf("%s : %d\n", res[i], command_size);
+	/*int i;*/
+	/*for (i = 0; i < directory_depth; i++)*/
+		/*printf("res[%d]: %s\n", i, res[i]);*/
+	/*printf("Size: %d\n", directory_depth);*/
+
+	/*free_command_array(res, directory_depth);*/
+
+	while (1)
+	{
+		char command[4096];
+		fgets(command,96,stdin);
+
+		int directory_depth = 0;
+		char** res = parse_command(command, &directory_depth);
+
+		/*int i;*/
+		/*for (i = 0; i < directory_depth; i++)*/
+			/*printf("res[%d]: %s\n", i, res[i]);*/
+		/*printf("Size: %d\n", directory_depth);*/
+
+		res[0] = rtrim(ltrim(res[0]));
+		printf("res[%d]: %s\n", 0, res[0]);
+
+		if (strcmp(res[0], "init") == 0)
+		{
+			init();
+		}
+
+		if (strcmp(res[0], "load") == 0)
+		{
+			load();
+		}
+
+		if (strcmp(res[0], "mkdir") == 0)
+		{
+			mkdir();
+		}
+
+		if (strcmp(res[0], "exit") == 0)
+		{
+			return 0;
+		}
+
+		if (strcmp(res[0], "help") == 0)
+		{
+			help();
+		}
+
+		free_command_array(res, directory_depth);
 	}
-
-	free_command_array(res, command_size);
-
-	/*while (1)*/
-	/*{*/
-		/*char command[4096];*/
-		/*fgets(command,96,stdin);*/
-		/*const char* delimiter = "/";*/
-		/*char* cm;*/
-		/*cm = rtrim(ltrim(strtok(command, delimiter)));*/
-
-		/*if (strcmp(cm, "init") == 0)*/
-		/*{*/
-			/*init();*/
-		/*}*/
-
-		/*if (strcmp(cm, "load") == 0)*/
-		/*{*/
-			/*load();*/
-		/*}*/
-
-		/*if (strcmp(cm, "mkdir") == 0)*/
-		/*{*/
-			/*mkdir();*/
-		/*}*/
-
-		/*if (strcmp(cm, "exit") == 0)*/
-		/*{*/
-			/*return 0;*/
-		/*}*/
-
-		/*if (strcmp(cm, "help") == 0)*/
-		/*{*/
-			/*help();*/
-		/*}*/
-	/*}*/
-
-	/*int i = mkdir();*/
-	/*printf("%d\n", i);*/
 
 	return 0;
 }
