@@ -134,7 +134,8 @@ load_cluster(int address)
 	return cluster;
 }
 
-int check_directory_entry(char* name, int address)
+int
+check_directory_entry(char* name, int address)
 {
 	union data_cluster root_cluster = load_cluster(address);
 
