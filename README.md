@@ -62,25 +62,27 @@ dados de atualizar o sistema de arquivos virtual nas entradas de diretório.
 Lembre-se que o sistema precisa manter-se consistente, ao ponto de poder ser
 recuperado a qualquer instante.
 
+#### Informações sobre o valor das entradas na FAT de 16 bits:
 ```
-- Informações sobre o valor das entradas na FAT de 16 bits:
 0x0000                -> cluster livre
 0x0001 - 0xfffc       -> arquivo (ponteiro p/ proximo cluster)
 0xfffd                -> boot block
 0xfffe                -> FAT
 0xffff                -> fim do arquivo
+```
 
-- Informações sobre a estrutura das entradas de diretório:
+#### Informações sobre a estrutura das entradas de diretório:
+```
 18 bytes         -> nome do arquivo
 1 byte           -> atributo do arquivo
 7 bytes          -> reservado
 2 bytes          -> numero do primeiro cluster ocupado
 4 bytes          -> tamanho do arquivo
 Byte de atributo do arquivo - valor:  0 - arquivo, 1 - diretório.
-
 ```
+
+#### Tipos e estruturas pré-definidas (usadas como referência)
 ```C
-- Tipos e estruturas pré-definidas (usadas como referência)
 /* entrada de diretorio, 32 bytes cada */
 typedef struct{
 	uint8_t filename[18];
