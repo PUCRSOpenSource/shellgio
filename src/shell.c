@@ -112,7 +112,8 @@ start_shell(void)
 
 		if (strcmp(res[0], "mkdir") == 0)
 		{
-			mkdir(res, path_depth);
+			if (mkdir(res, path_depth))
+				printf("\tOH NOES! Either directory already exists or no more directory entries are available!\n");
 		}
 
 		if (strcmp(res[0], "exit") == 0)

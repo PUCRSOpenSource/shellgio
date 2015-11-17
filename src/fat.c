@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include <fat.h>
 
 int
@@ -133,43 +134,60 @@ load_cluster(int address)
 	return cluster;
 }
 
+int check_directory_entry(char* name, int address)
+{
+	union data_cluster root_cluster = load_cluster(address);
+
+	int i;
+	for (i = 0; i < BLOCK_SIZE / sizeof(dir_entry_t); i++)
+		if (root_cluster.dir[i].attributes == 1 && strcmp((const char*)root_cluster.dir[i].filename, name) == 0)
+			return 0;
+
+	return 1;
+}
+
 int
 mkdir(char** path, int size)
 {
 	/*char dir_name[] = "dir";*/
 
-	// Load addresses
-	int address = get_free_address();
-	int root_address = 9;
-
-	// Load root cluster
-	union data_cluster root_cluster = load_cluster(root_address);
-
-	// Write filename on root dir
-	int i;
-	for (i = 0; i < BLOCK_SIZE / sizeof(dir_entry_t); i++)
+	if (check_directory_entry(path[1], 9))
 	{
-		if (root_cluster.dir[i].attributes != 1 && root_cluster.dir[i].attributes != 2)
+		// Load addresses
+		int address = get_free_address();
+		int root_address = 9;
+
+		// Load root cluster
+		union data_cluster root_cluster = load_cluster(root_address);
+
+		// Write filename on root dir
+		int i;
+		for (i = 0; i < BLOCK_SIZE / sizeof(dir_entry_t); i++)
 		{
-			int j;
-			/*for(j = 0; j < strlen(dir_name); j++) */
-			for(j = 0; j < strlen(path[1]); j++) 
+			if (root_cluster.dir[i].attributes != 1 && root_cluster.dir[i].attributes != 2)
 			{
-				/*root_cluster.dir[i].filename[j] = dir_name[j];*/
-				root_cluster.dir[i].filename[j] = path[1][j];
+				int j;
+				/*for(j = 0; j < strlen(dir_name); j++) */
+				for(j = 0; j < strlen(path[1]); j++) 
+				{
+					/*root_cluster.dir[i].filename[j] = dir_name[j];*/
+					root_cluster.dir[i].filename[j] = path[1][j];
+				}
+				root_cluster.dir[i].attributes = 1;
+				root_cluster.dir[i].first_block = address;
+				break;
 			}
-			root_cluster.dir[i].attributes = 1;
-			root_cluster.dir[i].first_block = address;
-			break;
 		}
+		save_data(root_address,root_cluster);
+
+		// Create File
+		union data_cluster new_file;
+		save_data(address, new_file);
+
+		return 0;
 	}
-	save_data(root_address,root_cluster);
 
-	// Create File
-	union data_cluster new_file;
-	save_data(address, new_file);
-
-	return 0;
+	return 1;
 }
 
 int
