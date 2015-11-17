@@ -96,18 +96,6 @@ update_fat(void)
 	fclose(ptr_myfat);
 }
 
-static void
-print_fat(void)
-{
-	printf("[ ");
-	int i;
-	for (i = 0; i < FAT_SIZE; ++i)
-	{
-			printf("%d ", fat[i]);
-	}
-	printf("]\n");
-}
-
 int
 get_free_address(void)
 {
@@ -116,7 +104,7 @@ get_free_address(void)
 	{
 		if (fat[i] == 0)
 		{
-			fat[i] = 1;
+			fat[i] = -1;
 			update_fat();
 			return i;
 		}
@@ -125,30 +113,80 @@ get_free_address(void)
 }
 
 int 
-load_cluster(int address)
+save_data(int address, union data_cluster file)
 {
 	 ptr_myfat = fopen("fat.part", "r+b");
-
-	 printf("%d\n", address * BLOCK_SIZE);
 	 fseek(ptr_myfat, address * BLOCK_SIZE, SEEK_SET);
-	 union data_cluster teste = { .data[0] = 0xaa };
-	 fwrite(&teste, sizeof(teste), 1, ptr_myfat);
+	 fwrite(&file, sizeof(file), 1, ptr_myfat);
 	 fclose(ptr_myfat);
 	 return 0;
+}
+
+union data_cluster
+load_cluster(int address) 
+{
+	ptr_myfat = fopen("fat.part", "rb");
+	fseek(ptr_myfat, address * BLOCK_SIZE, SEEK_SET);
+	union data_cluster cluster;
+	fread(&cluster, BLOCK_SIZE, 1, ptr_myfat);
+	fclose(ptr_myfat);
+	return cluster;
 }
 
 int
 mkdir(void)
 {
-	//parse path
-	//find directory
-	//write to directory
-	//find free address
-	//write data to free cluster
+	char dir_name[] = "dir";
 
+	// Load addresses
 	int address = get_free_address();
+	int root_address = 9;
 
-	load_cluster(address);
+	// Load root cluster
+	union data_cluster root_cluster = load_cluster(root_address);
+
+	// Write filename on root dir
+	int i;
+	for (i = 0; i < BLOCK_SIZE / sizeof(dir_entry_t); i++)
+	{
+		if (root_cluster.dir[i].attributes != 1 && root_cluster.dir[i].attributes != 2)
+		{
+			int j;
+			for(j = 0; j < strlen(dir_name); j++) 
+			{
+				root_cluster.dir[i].filename[j] = dir_name[j];
+			}
+			root_cluster.dir[i].attributes = 1;
+			root_cluster.dir[i].first_block = address;
+			break;
+		}
+	}
+	save_data(root_address,root_cluster);
+
+	// Create File
+	union data_cluster new_file;
+	save_data(address, new_file);
 
 	return 0;
+}
+
+int
+ls(void)
+{
+	// Loads root cluster
+	int root_address = 9;
+	union data_cluster root_cluster = load_cluster(root_address);
+
+	// Prints All Filenames
+	int i;
+	for (i = 0; i < BLOCK_SIZE / sizeof(dir_entry_t); i++) 
+	{
+		if (root_cluster.dir[i].attributes == 1 || root_cluster.dir[i].attributes == 2) 
+		{
+			printf("%s\n", root_cluster.dir[i].filename);
+		}
+	}
+
+	return 0;
+
 }

@@ -1,14 +1,15 @@
 #include <stdint.h>
+#include <string.h>
 
 #define FAT_SIZE 4096
 #define BLOCK_SIZE 1024
 #define DATA_CLUSTERS 4086
-#define FILE_NAME_SIZE 8
+#define FILE_NAME_SIZE 18
 #define RESERVED_SIZE 7
 
 typedef struct {
 	uint8_t  filename[FILE_NAME_SIZE];
-	uint8_t  attributes;
+	uint8_t  attributes; // 1 if dir, 2 if file
 	uint8_t  reserved[RESERVED_SIZE];
 	uint16_t first_block;
 	uint32_t size;
@@ -28,6 +29,7 @@ uint8_t cluster[BLOCK_SIZE];
 int get_free_address(void);
 int init(void);
 int load(void);
-int load_cluster(int address);
+int save_data(int address, union data_cluster cluster);
 void update_fat(void);
 int mkdir(void);
+int ls(void);
