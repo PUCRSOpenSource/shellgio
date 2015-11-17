@@ -86,7 +86,7 @@ start_shell(void)
 {
 	while (1)
 	{
-		printf("Super Shell 2000: $");
+		printf("Super Shell 2000$ ");
 		char command[4096];
 		fgets(command,96,stdin);
 
