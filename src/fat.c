@@ -105,12 +105,17 @@ get_free_address(void)
 	{
 		if (fat[i] == 0)
 		{
-			fat[i] = -1;
-			update_fat();
 			return i;
 		}
 	}
 	return -1;
+}
+
+void
+set_fat_address(int address, int value)
+{
+	fat[address] = value;
+	update_fat();
 }
 
 int 
@@ -172,14 +177,13 @@ mkdir(char** path, int size)
 			if (root_cluster.dir[i].attributes != 1 && root_cluster.dir[i].attributes != 2)
 			{
 				int j;
-				/*for(j = 0; j < strlen(dir_name); j++) */
 				for(j = 0; j < strlen(path[1]); j++) 
 				{
-					/*root_cluster.dir[i].filename[j] = dir_name[j];*/
 					root_cluster.dir[i].filename[j] = path[1][j];
 				}
 				root_cluster.dir[i].attributes = 1;
 				root_cluster.dir[i].first_block = address;
+				set_fat_address(address, -1);
 				break;
 			}
 		}

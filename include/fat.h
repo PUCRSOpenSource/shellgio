@@ -29,6 +29,7 @@ uint8_t root_dir[BLOCK_SIZE];
 uint8_t cluster[BLOCK_SIZE];
 
 int get_free_address(void);
+void set_fat_address(int address, int value);
 int init(void);
 int load(void);
 int save_data(int address, union data_cluster cluster);
