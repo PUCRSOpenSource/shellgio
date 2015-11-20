@@ -8,6 +8,7 @@
 #define DATA_CLUSTERS 4086
 #define FILE_NAME_SIZE 18
 #define RESERVED_SIZE 7
+#define ROOT_ADDRESS 9
 
 typedef struct {
 	uint8_t  filename[FILE_NAME_SIZE];

@@ -93,10 +93,10 @@ start_shell(void)
 		int path_depth = 0;
 		char** res = parse_command(command, &path_depth);
 
-		/*int i;*/
-		/*for (i = 0; i < path_depth; i++)*/
-			/*printf("res[%d]: %s\n", i, res[i]);*/
-		/*printf("Size: %d\n", path_depth);*/
+		int i;
+		for (i = 0; i < path_depth; i++)
+			printf("res[%d]: %s\n", i, res[i]);
+		printf("Size: %d\n", path_depth);
 
 		res[0] = rtrim(ltrim(res[0]));
 
