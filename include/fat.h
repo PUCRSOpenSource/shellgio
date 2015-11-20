@@ -1,5 +1,7 @@
+#ifndef FAT_H
+#define FAT_H
+
 #include <stdint.h>
-#include <string.h>
 
 #define FAT_SIZE 4096
 #define BLOCK_SIZE 1024
@@ -33,3 +35,5 @@ int save_data(int address, union data_cluster cluster);
 void update_fat(void);
 int mkdir(char** path, int size);
 int ls(void);
+
+#endif /* FAT_H */
