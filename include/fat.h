@@ -43,5 +43,6 @@ int mkdir(char** path, int size);
 int ls(char** path, int size);
 int create(char** path, int size);
 void zero_data_cluster(union data_cluster* dc);
+int unlink(char** path, int size);
 
 #endif /* FAT_H */

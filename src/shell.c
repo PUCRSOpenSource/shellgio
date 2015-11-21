@@ -215,6 +215,11 @@ start_shell(void)
 			pai_de_familia();
 		}
 
+		if (strcmp(res[0], "unlink") == 0)
+		{
+			unlink(res, path_depth);
+		}
+
 		free_command_array(res, path_depth);
 	}
 

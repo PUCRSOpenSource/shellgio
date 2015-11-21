@@ -195,8 +195,9 @@ check_directory_entry(const char* path, union data_cluster* cluster)
 	int flag = 0;
 	for (i = 0; i < BLOCK_SIZE / sizeof(dir_entry_t); i++)
 	{
-		if (strcmp((const char*)cluster->dir[i].filename, path) == 0)
-			return 0;
+		if (cluster->dir[i].attributes == 1 || cluster->dir[i].attributes == 2)
+			if (strcmp((const char*)cluster->dir[i].filename, path) == 0)
+				return 0;
 
 		if (cluster->dir[i].attributes != 1 && cluster->dir[i].attributes != 2)
 			flag = 1;
@@ -316,6 +317,15 @@ ls(char** path, int size)
 int
 unlink_fat(int address)
 {
+	if (fat[address] <= 0)
+	{
+		fat[address] = 0;
+		update_fat();
+		return 1;
+	}
+	int next_hop = fat[address];
+	fat[address] = 0;
+	return unlink_fat(next_hop);
 
 }
 
@@ -325,7 +335,6 @@ unlink(char** path, int size)
 	// Load previous address
 	int prev_address = load_address_from_path(path + 1, size - 1, ROOT_ADDRESS);
 	union data_cluster* prev_cluster = load_cluster(prev_address);
-
 
 	int i;
 	for (i = 0; i < BLOCK_SIZE / sizeof(dir_entry_t); i++) 
@@ -350,4 +359,6 @@ unlink(char** path, int size)
 			}
 		}
 	}
+	save_data(prev_address, *prev_cluster);
+	return 0;
 }
