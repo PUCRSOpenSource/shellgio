@@ -312,3 +312,42 @@ ls(char** path, int size)
 	return 0;
 
 }
+
+int
+unlink_fat(int address)
+{
+
+}
+
+int
+unlink(char** path, int size)
+{
+	// Load previous address
+	int prev_address = load_address_from_path(path + 1, size - 1, ROOT_ADDRESS);
+	union data_cluster* prev_cluster = load_cluster(prev_address);
+
+
+	int i;
+	for (i = 0; i < BLOCK_SIZE / sizeof(dir_entry_t); i++) 
+	{
+		if (strcmp((const char*)prev_cluster->dir[i].filename, (const char*)path[size - 1]) == 0)
+		{
+			if (prev_cluster->dir[i].attributes == 1)
+			{
+				int address = prev_cluster->dir[i].first_block;
+				union data_cluster* cluster = load_cluster(address);
+				if(is_empty(cluster))
+				{
+					prev_cluster->dir[i].attributes = 0;
+					unlink_fat(address);
+				}
+			}
+			if (prev_cluster->dir[i].attributes == 2)
+			{
+				int address = prev_cluster->dir[i].first_block;
+				prev_cluster->dir[i].attributes = 0;
+				unlink_fat(address);
+			}
+		}
+	}
+}
