@@ -67,6 +67,48 @@ init(void)
 }
 
 int
+create(char** path, int size)
+{
+	// Load addresses
+	int address = get_free_address();
+
+	// Load cluster address
+	int cluster_address;
+	if ((cluster_address = load_address_from_path(path + 1, size - 1, ROOT_ADDRESS)) == -1)
+		return 1;
+	
+	// Load cluster
+	union data_cluster* cluster = load_cluster(cluster_address);
+
+	// Check directory
+	if (!check_directory_entry(path[size - 1], cluster))
+		return 1;
+
+
+	// Write directory
+	int i;
+	for (i = 0; i < BLOCK_SIZE / sizeof(dir_entry_t); i++)
+	{
+		if (cluster->dir[i].attributes != 1 && cluster->dir[i].attributes != 2)
+		{
+			int j;
+			for(j = 0; j < strlen(path[size - 1]); j++) 
+			{
+				cluster->dir[i].filename[j] = path[size - 1][j];
+			}
+			cluster->dir[i].attributes = 2;
+			cluster->dir[i].first_block = address;
+			set_fat_address(address, -1);
+			break;
+		}
+
+	}
+	save_data(cluster_address, *cluster);
+
+	return 0;
+}
+
+int
 load(void)
 { 
 	ptr_myfat = fopen("fat.part", "rb"); 
@@ -192,7 +234,7 @@ load_address_from_path(char** path, int size, int address)
 	return -1;
 }
 
-static void
+void
 zero_data_cluster(union data_cluster* dc)
 {
 	int i;

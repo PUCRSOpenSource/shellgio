@@ -175,6 +175,11 @@ start_shell(void)
 				printf("\tOH NOES! Either directory already exists or no more directory entries are available!\n");
 		}
 
+		if (strcmp(res[0], "create") == 0)
+		{
+			create(res, path_depth);
+		}
+
 		if (strcmp(res[0], "exit") == 0)
 		{
 			return 0;
