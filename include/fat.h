@@ -36,6 +36,6 @@ int load(void);
 int save_data(int address, union data_cluster cluster);
 void update_fat(void);
 int mkdir(char** path, int size);
-int ls(void);
+int ls(char** path, int size);
 
 #endif /* FAT_H */

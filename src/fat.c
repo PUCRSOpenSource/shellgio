@@ -157,88 +157,81 @@ check_directory_entry(char* name, int address)
 	return 0;
 }
 
-//    p
-// /home/matthias/poesia      size 3
-union data_cluster*
-load_cluster_from_path(char** path, int size, int address)
+int
+load_address_from_path(char** path, int size, int address)
 {
-	union data_cluster* cluster = load_cluster(address);
-	printf("Size os path in load_cluster_from_path%d\n", size);
 	if (size == 1) {
-		return cluster;
+		return address;
 	}
+	union data_cluster* cluster = load_cluster(address);
 	int i;
 	for (i = 0; i < BLOCK_SIZE / sizeof(dir_entry_t); i++)
 	{
-		if (strcmp((const char*)cluster->dir[i].filename, (const char*)path))
+		if (strcmp((const char*)cluster->dir[i].filename, (const char*) *path) == 0)
 		{
-			return load_cluster_from_path(++path, size - 1, cluster->dir[i].first_block);
+			return load_address_from_path(++path, size - 1, cluster->dir[i].first_block);
 		}
 	}
-	return NULL;
+	return -1;
 }
 
 int
 mkdir(char** path, int size)
 {
 
-	if (check_directory_entry(path[1], 9))
+	// Load addresses
+	int address = get_free_address();
+
+	// Load root cluster
+	// union data_cluster* root_cluster = load_cluster(root_address);
+	int cluster_address = load_address_from_path(path + 1, size - 1, ROOT_ADDRESS);
+	union data_cluster* cluster = load_cluster(cluster_address);
+
+	// Write filename on root dir
+	int i;
+	for (i = 0; i < BLOCK_SIZE / sizeof(dir_entry_t); i++)
 	{
-		// Load addresses
-		int address = get_free_address();
-		int root_address = 9;
-
-		// Load root cluster
-		// union data_cluster* root_cluster = load_cluster(root_address);
-		union data_cluster* root_cluster = load_cluster_from_path(path + 1, size - 1, ROOT_ADDRESS);
-
-		// Write filename on root dir
-		int i;
-		for (i = 0; i < BLOCK_SIZE / sizeof(dir_entry_t); i++)
+		if (cluster->dir[i].attributes != 1 && cluster->dir[i].attributes != 2)
 		{
-			if (root_cluster->dir[i].attributes != 1 && root_cluster->dir[i].attributes != 2)
+			int j;
+			for(j = 0; j < strlen(path[size - 1]); j++) 
 			{
-				int j;
-				for(j = 0; j < strlen(path[1]); j++) 
-				{
-					root_cluster->dir[i].filename[j] = path[1][j];
-				}
-				root_cluster->dir[i].attributes = 1;
-				root_cluster->dir[i].first_block = address;
-				set_fat_address(address, -1);
-				break;
+				cluster->dir[i].filename[j] = path[size - 1][j];
 			}
+			cluster->dir[i].attributes = 1;
+			cluster->dir[i].first_block = address;
+			set_fat_address(address, -1);
+			break;
 		}
-		save_data(root_address, *root_cluster);
-
-		// Create File
-		union data_cluster new_file;
-		save_data(address, new_file);
-
-		return 0;
 	}
+	save_data(cluster_address, *cluster);
 
-	return 1;
+	// Create File
+	union data_cluster new_file;
+	save_data(address, new_file);
+
+	return 0;
 }
 
 int
-ls(void)
+ls(char** path, int size)
 {
 	// Loads root cluster
-	int root_address = 9;
-	union data_cluster* root_cluster = load_cluster(root_address);
+	int address = load_address_from_path(path + 1, size, ROOT_ADDRESS);
+	union data_cluster* cluster = load_cluster(address);
 
 	// Prints All Filenames
 	int i;
 	for (i = 0; i < BLOCK_SIZE / sizeof(dir_entry_t); i++) 
 	{
-		if (root_cluster->dir[i].attributes == 1 || root_cluster->dir[i].attributes == 2) 
+		/*printf("Diretorio com atributo: %d\n", cluster->dir[i].attributes);*/
+		if (cluster->dir[i].attributes == 1 || cluster->dir[i].attributes == 2) 
 		{
-			printf("\t%s", root_cluster->dir[i].filename);
+			printf("\t%s\n", cluster->dir[i].filename);
 		}
 	}
 
-	free(root_cluster);
+	free(cluster);
 
 	return 0;
 

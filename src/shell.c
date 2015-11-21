@@ -81,6 +81,26 @@ help(void)
 	printf("exit                       - exit shell\n");
 }
 
+static char*
+stripChars(const char *string, const char *chars)
+{
+	char* newstr = malloc(strlen(string) + 1);
+
+	int counter = 0;
+	while(*string)
+	{
+		if (!strchr(chars, *string))
+		{
+			newstr[counter] = *string;
+			counter++;
+		}
+		string++;
+	}
+
+	newstr[counter] = 0;
+	return newstr;
+}
+
 int
 start_shell(void)
 {
@@ -90,13 +110,17 @@ start_shell(void)
 		char command[4096];
 		fgets(command,96,stdin);
 
+
 		int path_depth = 0;
 		char** res = parse_command(command, &path_depth);
 
 		int i;
 		for (i = 0; i < path_depth; i++)
-			printf("res[%d]: %s\n", i, res[i]);
-		printf("Size: %d\n", path_depth);
+		{
+			/*printf("res[%d]: %s\n", i, res[i]);*/
+			res[i] = stripChars(res[i], "\n\\ ");
+		}
+		/*printf("Size: %d\n\n\n", path_depth);*/
 
 		res[0] = rtrim(ltrim(res[0]));
 
@@ -128,7 +152,7 @@ start_shell(void)
 
 		if (strcmp(res[0], "ls") == 0)
 		{
-			ls();
+			ls(res, path_depth);
 		}
 
 		if (strcmp(res[0], "clear") == 0)
