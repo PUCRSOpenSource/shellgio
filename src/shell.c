@@ -32,6 +32,12 @@ doge(void)
 	printf("     :YYiii$$$$$$$YYYYYYY$$$$YY$$$$YYiiiiiYYYYYYi'    \n");
 }
 
+void
+pai_de_familia(void)
+{
+	printf("Pai de Família em Japonês - https://www.youtube.com/watch?v=CKuP0c9lGBM\n");
+}
+
 static char**
 parse_command(char* str, int* depth)
 {
@@ -195,6 +201,11 @@ start_shell(void)
 		if (strcmp(res[0], "doge") == 0)
 		{
 			doge();
+		}
+
+		if (strcmp(res[0], "paidefamilia") == 0)
+		{
+			pai_de_familia();
 		}
 
 		free_command_array(res, path_depth);
