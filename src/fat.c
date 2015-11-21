@@ -3,7 +3,7 @@
 #include <string.h>
 #include <fat.h>
 
-g_fat_loaded = 0;
+int g_fat_loaded = 0;
 
 int
 init(void)
