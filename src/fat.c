@@ -3,6 +3,8 @@
 #include <string.h>
 #include <fat.h>
 
+g_fat_loaded = 0;
+
 int
 init(void)
 {
@@ -35,6 +37,8 @@ init(void)
 	{
 		fat[i] = 0x0000;
 	}
+
+	g_fat_loaded = 1;
 
 	//Write fat
 	fwrite(&fat, sizeof(fat), 1, ptr_myfat);
@@ -76,6 +80,8 @@ load(void)
 	fread(&fat, sizeof(fat), 1, ptr_myfat);
 
 	fclose(ptr_myfat);
+
+	g_fat_loaded = 1;
 
 	return 0;
 }
@@ -242,10 +248,11 @@ ls(char** path, int size)
 	int i;
 	for (i = 0; i < BLOCK_SIZE / sizeof(dir_entry_t); i++) 
 	{
-		if (cluster->dir[i].attributes == 1 || cluster->dir[i].attributes == 2) 
-		{
-			printf("\t%s\n", cluster->dir[i].filename);
-		}
+		if (cluster->dir[i].attributes == 1) 
+			printf("\tdir  %s\n", cluster->dir[i].filename);
+
+		if (cluster->dir[i].attributes == 2) 
+			printf("\tfile %s\n", cluster->dir[i].filename);
 	}
 
 	free(cluster);

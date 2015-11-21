@@ -139,6 +139,8 @@ start_shell(void)
 {
 	while (1)
 	{
+		if (!g_fat_loaded)
+			printf("\e[1;31mFAT NOT LOADED\e[0m\n");
 		printf("Super Shell 2000$ ");
 		char command[4096];
 		fgets(command,96,stdin);
