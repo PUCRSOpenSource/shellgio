@@ -30,19 +30,11 @@ uint8_t root_dir[BLOCK_SIZE];
 uint8_t cluster[BLOCK_SIZE];
 extern int g_fat_loaded;
 
-int load_address_from_path(char** path, int size, int address);
-int check_directory_entry(const char* path, union data_cluster* cluster);
-int get_free_address(void);
-void set_fat_address(int address, int value);
 int init(void);
 int load(void);
-union data_cluster*  load_cluster(int address);
-int save_data(int address, union data_cluster cluster);
-void update_fat(void);
 int mkdir(char** path, int size);
 int ls(char** path, int size);
 int create(char** path, int size);
-void zero_data_cluster(union data_cluster* dc);
 int unlink(char** path, int size);
 
 #endif /* FAT_H */

@@ -5,6 +5,111 @@
 
 int g_fat_loaded = 0;
 
+static void
+zero_data_cluster(union data_cluster* dc)
+{
+	int i;
+	for (i = 0; i < BLOCK_SIZE / sizeof(dir_entry_t); i++)
+		dc->dir[i].attributes = 0;
+}
+
+static void
+update_fat(void)
+{
+	ptr_myfat = fopen("fat.part", "r+b");
+
+	if (!ptr_myfat)
+	{
+		printf("Couldn't open fat!\n");
+	}
+	else
+	{
+		fseek(ptr_myfat, 1024, SEEK_SET);
+		fwrite(&fat, sizeof(fat), 1, ptr_myfat);
+	}
+
+	fclose(ptr_myfat);
+}
+
+static int 
+save_data(int address, union data_cluster file)
+{
+	 ptr_myfat = fopen("fat.part", "r+b");
+	 fseek(ptr_myfat, address * BLOCK_SIZE, SEEK_SET);
+	 fwrite(&file, sizeof(file), 1, ptr_myfat);
+	 fclose(ptr_myfat);
+	 return 0;
+}
+
+static union data_cluster*
+load_cluster(int address) 
+{
+	ptr_myfat = fopen("fat.part", "rb");
+	fseek(ptr_myfat, address * BLOCK_SIZE, SEEK_SET);
+	union data_cluster* cluster = malloc(sizeof(union data_cluster));
+	fread(cluster, BLOCK_SIZE, 1, ptr_myfat);
+	fclose(ptr_myfat);
+	return cluster;
+}
+
+static void
+set_fat_address(int address, int value)
+{
+	fat[address] = value;
+	update_fat();
+}
+
+static int
+get_free_address(void)
+{
+	int i;
+	for (i = 10; i < FAT_SIZE; i++)
+	{
+		if (fat[i] == 0)
+		{
+			return i;
+		}
+	}
+	return -1;
+}
+
+static int 
+check_directory_entry(const char* path, union data_cluster* cluster)
+{
+	int i;
+	int flag = 0;
+	for (i = 0; i < BLOCK_SIZE / sizeof(dir_entry_t); i++)
+	{
+		if (cluster->dir[i].attributes == 1 || cluster->dir[i].attributes == 2)
+			if (strcmp((const char*)cluster->dir[i].filename, path) == 0)
+				return 0;
+
+		if (cluster->dir[i].attributes != 1 && cluster->dir[i].attributes != 2)
+			flag = 1;
+	}
+	if (flag == 0)
+		return 0;
+	return 1;
+}
+
+static int
+load_address_from_path(char** path, int size, int address)
+{
+	if (size == 1) {
+		return address;
+	}
+	union data_cluster* cluster = load_cluster(address);
+	int i;
+	for (i = 0; i < BLOCK_SIZE / sizeof(dir_entry_t); i++)
+	{
+		if (strcmp((const char*)cluster->dir[i].filename, (const char*) *path) == 0)
+		{
+			return load_address_from_path(++path, size - 1, cluster->dir[i].first_block);
+		}
+	}
+	return -1;
+}
+
 int
 init(void)
 {
@@ -128,85 +233,6 @@ load(void)
 	return 0;
 }
 
-void
-update_fat(void)
-{
-	ptr_myfat = fopen("fat.part", "r+b");
-
-	if (!ptr_myfat)
-	{
-		printf("Couldn't open fat!\n");
-	}
-	else
-	{
-		fseek(ptr_myfat, 1024, SEEK_SET);
-		fwrite(&fat, sizeof(fat), 1, ptr_myfat);
-	}
-
-	fclose(ptr_myfat);
-}
-
-int
-get_free_address(void)
-{
-	int i;
-	for (i = 10; i < FAT_SIZE; i++)
-	{
-		if (fat[i] == 0)
-		{
-			return i;
-		}
-	}
-	return -1;
-}
-
-void
-set_fat_address(int address, int value)
-{
-	fat[address] = value;
-	update_fat();
-}
-
-int 
-save_data(int address, union data_cluster file)
-{
-	 ptr_myfat = fopen("fat.part", "r+b");
-	 fseek(ptr_myfat, address * BLOCK_SIZE, SEEK_SET);
-	 fwrite(&file, sizeof(file), 1, ptr_myfat);
-	 fclose(ptr_myfat);
-	 return 0;
-}
-
-union data_cluster*
-load_cluster(int address) 
-{
-	ptr_myfat = fopen("fat.part", "rb");
-	fseek(ptr_myfat, address * BLOCK_SIZE, SEEK_SET);
-	union data_cluster* cluster = malloc(sizeof(union data_cluster));
-	fread(cluster, BLOCK_SIZE, 1, ptr_myfat);
-	fclose(ptr_myfat);
-	return cluster;
-}
-
-int 
-check_directory_entry(const char* path, union data_cluster* cluster)
-{
-	int i;
-	int flag = 0;
-	for (i = 0; i < BLOCK_SIZE / sizeof(dir_entry_t); i++)
-	{
-		if (cluster->dir[i].attributes == 1 || cluster->dir[i].attributes == 2)
-			if (strcmp((const char*)cluster->dir[i].filename, path) == 0)
-				return 0;
-
-		if (cluster->dir[i].attributes != 1 && cluster->dir[i].attributes != 2)
-			flag = 1;
-	}
-	if (flag == 0)
-		return 0;
-	return 1;
-}
-
 int
 is_empty(union data_cluster* cluster)
 {
@@ -215,32 +241,6 @@ is_empty(union data_cluster* cluster)
 		if (cluster->dir[i].attributes == 1 || cluster->dir[i].attributes == 2)
 			return 0;
 	return 1;
-}
-
-int
-load_address_from_path(char** path, int size, int address)
-{
-	if (size == 1) {
-		return address;
-	}
-	union data_cluster* cluster = load_cluster(address);
-	int i;
-	for (i = 0; i < BLOCK_SIZE / sizeof(dir_entry_t); i++)
-	{
-		if (strcmp((const char*)cluster->dir[i].filename, (const char*) *path) == 0)
-		{
-			return load_address_from_path(++path, size - 1, cluster->dir[i].first_block);
-		}
-	}
-	return -1;
-}
-
-void
-zero_data_cluster(union data_cluster* dc)
-{
-	int i;
-	for (i = 0; i < BLOCK_SIZE / sizeof(dir_entry_t); i++)
-		dc->dir[i].attributes = 0;
 }
 
 int
