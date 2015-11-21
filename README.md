@@ -123,8 +123,8 @@ devem ser implementados no shell:
 * `create [/caminho/arquivo]` - criar arquivo
 * `unlink  [/caminho/arquivo]`  -  excluir  arquivo  ou  diretório  (o  diretório
 	precisa estar vazio)
-* `write "string" [/caminho/arquivo]` - escrever dados em um arquivo (so-
-	brescrever dados)
+* `write "string" [/caminho/arquivo]` - escrever dados em um arquivo
+	(sobrescrever dados)
 * `append "string" [/caminho/arquivo]` - anexar dados em um arquivo
 * `read [/caminho/arquivo]` - ler o conteúdo de um arquivo
 
