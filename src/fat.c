@@ -140,21 +140,22 @@ load_cluster(int address)
 	return cluster;
 }
 
-int
-check_directory_entry(char* name, int address)
+int 
+check_directory_entry(const char* path, union data_cluster* cluster)
 {
-	union data_cluster* root_cluster = load_cluster(address);
-
 	int i;
+	int flag = 0;
 	for (i = 0; i < BLOCK_SIZE / sizeof(dir_entry_t); i++)
-		if (root_cluster->dir[i].attributes == 1 && strcmp((const char*)root_cluster->dir[i].filename, name) == 0)
+	{
+		if (strcmp((const char*)cluster->dir[i].filename, path) == 0)
 			return 0;
 
-	for (i = 0; i < BLOCK_SIZE / sizeof(dir_entry_t); i++)
-		if (root_cluster->dir[i].attributes != 1 && root_cluster->dir[i].attributes != 2)
-			return 1;
-
-	return 0;
+		if (cluster->dir[i].attributes != 1 && cluster->dir[i].attributes != 2)
+			flag = 1;
+	}
+	if (flag == 0)
+		return 0;
+	return 1;
 }
 
 int
@@ -182,12 +183,19 @@ mkdir(char** path, int size)
 	// Load addresses
 	int address = get_free_address();
 
-	// Load root cluster
-	// union data_cluster* root_cluster = load_cluster(root_address);
-	int cluster_address = load_address_from_path(path + 1, size - 1, ROOT_ADDRESS);
+	// Load cluster address
+	int cluster_address;
+	if ((cluster_address = load_address_from_path(path + 1, size - 1, ROOT_ADDRESS)) == -1)
+		return 1;
+	
+	// Load cluster
 	union data_cluster* cluster = load_cluster(cluster_address);
 
-	// Write filename on root dir
+	// Check directory
+	if (!check_directory_entry(path[size - 1], cluster))
+		return 1;
+
+	// Write directory
 	int i;
 	for (i = 0; i < BLOCK_SIZE / sizeof(dir_entry_t); i++)
 	{
@@ -203,10 +211,11 @@ mkdir(char** path, int size)
 			set_fat_address(address, -1);
 			break;
 		}
+
 	}
 	save_data(cluster_address, *cluster);
 
-	// Create File
+	// Create and save file
 	union data_cluster new_file;
 	save_data(address, new_file);
 
@@ -216,7 +225,7 @@ mkdir(char** path, int size)
 int
 ls(char** path, int size)
 {
-	// Loads root cluster
+	// Loads cluster
 	int address = load_address_from_path(path + 1, size, ROOT_ADDRESS);
 	union data_cluster* cluster = load_cluster(address);
 
@@ -224,7 +233,6 @@ ls(char** path, int size)
 	int i;
 	for (i = 0; i < BLOCK_SIZE / sizeof(dir_entry_t); i++) 
 	{
-		/*printf("Diretorio com atributo: %d\n", cluster->dir[i].attributes);*/
 		if (cluster->dir[i].attributes == 1 || cluster->dir[i].attributes == 2) 
 		{
 			printf("\t%s\n", cluster->dir[i].filename);
