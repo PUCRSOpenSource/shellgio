@@ -165,6 +165,16 @@ check_directory_entry(const char* path, union data_cluster* cluster)
 }
 
 int
+is_empty(union data_cluster* cluster)
+{
+	int i;
+	for (i = 0; i < BLOCK_SIZE / sizeof(dir_entry_t); i++)
+		if (cluster->dir[i].attributes == 1 || cluster->dir[i].attributes == 2)
+			return 0;
+	return 1;
+}
+
+int
 load_address_from_path(char** path, int size, int address)
 {
 	if (size == 1) {
