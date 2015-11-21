@@ -40,12 +40,12 @@ clusters que possuem diversas entradas de diretório (assim como o diretório
 
 #### Detalhes sobre o sistema de arquivos
 
-O sistema de arquivos possui uma série de limitações, que foram determinadas
-com o intuito de simplificar a implementação do trabalho.  A primeira limitação
+O sistema de arquivos possui uma série de limitações, que foram determinadas com
+o intuito de simplificar a implementação do trabalho.  A primeira limitação
 refere-se ao tamanho da FAT, onde é possível armazenar apenas 4096 entradas para
 blocos,  o que limita o tamanho da partição virtual em 4MB. Lembre que a FAT é
 um "mapa" que representa a estrutura dos blocos da partição.  Se mais entradas
-fossem necessárias (para um disco maior), se- riam necessários blocos adicionais
+fossem necessárias (para um disco maior), seriam necessários blocos adicionais
 para a FAT. A segunda limitação refere-se ao número de entradas de diretório em
 cada nível da árvore.  Cada entrada ocupa 32 bytes, o que limita o número de
 entradas de diretório em 32, tanto no diretório raiz quanto em sub-diretórios
@@ -132,10 +132,10 @@ devem ser implementados no shell:
 #### Entrega e apresentação
 
 O trabalho deverá ser realizado em duplas.  Qualquer linguagem de programação
-pode  ser  utilizada  (preferencialmente  C  ou  C++)  para  o  desen-
-volvimento do trabalho, desde que as estruturas de dados que implementam o
-sistema  de  arquivos  sejam  manipuladas  e  armazenadas  de  acordo  com  a
-especificação. A  entrega  do  trabalho  deverá  ser  realizada  pelo  moodle
-em um arquivo *.tar.gz* contendo a implementação, instruções de uso e nome dos
-integrantes.  A apresentação do trabalho será realizada em aula.
+pode  ser  utilizada  (preferencialmente  C  ou  C++)  para  o  desenvolvimento
+do trabalho, desde que as estruturas de dados que implementam o sistema  de
+arquivos  sejam  manipuladas  e  armazenadas  de  acordo  com  a especificação.
+A  entrega  do  trabalho  deverá  ser  realizada  pelo  moodle em um arquivo
+*.tar.gz* contendo a implementação, instruções de uso e nome dos integrantes.  A
+apresentação do trabalho será realizada em aula.
 
