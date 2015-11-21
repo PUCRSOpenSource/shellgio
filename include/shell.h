@@ -4,5 +4,6 @@
 
 void help(void);
 int start_shell(void);
+void doge(void);
 
 #endif /* SHELL_H */

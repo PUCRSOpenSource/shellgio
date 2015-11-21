@@ -5,6 +5,33 @@
 #include <fat.h>
 #include <shell.h>
 
+void
+doge(void)
+{
+	printf("                Y.                      _             \n");
+	printf("                YiL                   .```.           \n");
+	printf("  much files    Yii;                .; .;;`.          \n");
+	printf("                YY;ii._           .;`.;;;; :          \n");
+	printf(" such shell     iiYYYYYYiiiii;;;;i` ;;::;;;;          \n");
+	printf("            _.;YYYYYYiiiiiiYYYii  .;;.   ;;;          \n");
+	printf("wow      .YYYYYYYYYYiiYYYYYYYYYYYYii;`  ;;;;          \n");
+	printf("       .YYYYYYY$$YYiiYY$$$$iiiYYYYYY;.ii;`..          \n");
+	printf("      :YYY$!.  TYiiYY$$$$$YYYYYYYiiYYYYiYYii.         \n");
+	printf("      Y$MM$:   :YYYYYY$! `` 4YYYYYiiiYYYYiiYY.        \n");
+	printf("   `. :MM$$b.,dYY$$Yii  :'   :YYYYllYiiYYYiYY         \n");
+	printf("_.._ :`4MM$!YYYYYYYYYii,.__.diii$$YYYYYYYYYYY         \n");
+	printf(".,._ $b`P`      4$$$$$iiiiiiii$$$$YY$$$$$$YiY;        \n");
+	printf("   `,.`$:       :$$$$$$$$$YYYYY$$$$$$$$$YYiiYYL       \n");
+	printf("     `;$$.    .;PPb$`.,.``T$$YY$$$$YYYYYYiiiYYU:      \n");
+	printf("    ;$P$;;: ;;;;i$y$ !Y$$$b;$$$Y$YY$$YYYiiiYYiYY      \n");
+	printf("    $Fi$$ .. ``:iii.`- :YYYYY$$YY$$$$$YYYiiYiYYY      \n");
+	printf("    :Y$$rb ````  `_..;;i;YYY$YY$$$$$$$YYYYYYYiYY:     \n");
+	printf("     :$$$$$i;;iiiiidYYYYYYYYYY$$$$$$YYYYYYYiiYYYY.    \n");
+	printf("      `$$$$$$$YYYYYYYYYYYYY$$$$$$YYYYYYYYiiiYYYYYY    \n");
+	printf("      .i!$$$$$$YYYYYYYYY$$$$$$YYY$$YYiiiiiiYYYYYYY    \n");
+	printf("     :YYiii$$$$$$$YYYYYYY$$$$YY$$$$YYiiiiiYYYYYYi'    \n");
+}
+
 static char**
 parse_command(char* str, int* depth)
 {
@@ -163,6 +190,11 @@ start_shell(void)
 		if (strcmp(res[0], "memprint") == 0)
 		{
 			system("hexdump fat.part");
+		}
+
+		if (strcmp(res[0], "doge") == 0)
+		{
+			doge();
 		}
 
 		free_command_array(res, path_depth);
