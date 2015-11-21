@@ -30,6 +30,8 @@ uint8_t root_dir[BLOCK_SIZE];
 uint8_t cluster[BLOCK_SIZE];
 extern int g_fat_loaded;
 
+int load_address_from_path(char** path, int size, int address);
+int check_directory_entry(const char* path, union data_cluster* cluster);
 int get_free_address(void);
 void set_fat_address(int address, int value);
 int init(void);
