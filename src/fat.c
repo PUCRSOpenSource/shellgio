@@ -176,6 +176,14 @@ load_address_from_path(char** path, int size, int address)
 	return -1;
 }
 
+static void
+zero_data_cluster(union data_cluster* dc)
+{
+	int i;
+	for (i = 0; i < BLOCK_SIZE / sizeof(dir_entry_t); i++)
+		dc->dir[i].attributes = 0;
+}
+
 int
 mkdir(char** path, int size)
 {
@@ -217,6 +225,7 @@ mkdir(char** path, int size)
 
 	// Create and save file
 	union data_cluster new_file;
+	zero_data_cluster(&new_file);
 	save_data(address, new_file);
 
 	return 0;
