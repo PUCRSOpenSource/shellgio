@@ -40,7 +40,7 @@ clusters que possuem diversas entradas de diretório (assim como o diretório
 
 #### Detalhes sobre o sistema de arquivos
 
-O sistema de arquivos possui uma série de limitações, que foram determi- nadas
+O sistema de arquivos possui uma série de limitações, que foram determinadas
 com o intuito de simplificar a implementação do trabalho.  A primeira limitação
 refere-se ao tamanho da FAT, onde é possível armazenar apenas 4096 entradas para
 blocos,  o que limita o tamanho da partição virtual em 4MB. Lembre que a FAT é
