@@ -229,6 +229,7 @@ start_shell(void)
 		if (strcmp(res[0], "append") == 0)
 			append(res, path_depth, string_arg);
 
+		free(string_arg);
 		free_command_array(res, path_depth);
 	}
 
