@@ -269,7 +269,7 @@ mkdir(char** path, int size)
 		if (cluster->dir[i].attributes != 1 && cluster->dir[i].attributes != 2)
 		{
 			int j;
-			for(j = 0; j < strlen(path[size - 1]); j++)
+			for(j = 0; j < strlen(path[size - 1]) + 1; j++)
 			{
 				cluster->dir[i].filename[j] = path[size - 1][j];
 			}
