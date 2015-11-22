@@ -38,7 +38,7 @@ int create(char** path, int size);
 int unlink(char** path, int size);
 int write(char** path, int size, char* string);
 int read(char** path, int size);
-int append(char** path, int size, char* string)
+int append(char** path, int size, char* string);
 
 
 #endif /* FAT_H */
