@@ -203,6 +203,7 @@ create(char** path, int size)
 			}
 			cluster->dir[i].attributes = 2;
 			cluster->dir[i].first_block = address;
+			cluster->dir[i].size = 0;
 			set_fat_address(address, -1);
 			break;
 		}
