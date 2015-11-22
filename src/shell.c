@@ -175,16 +175,10 @@ start_shell(void)
 
 		char* string_arg = malloc(sizeof(char)*4096);
 		res[0] = parse_string_command(res[0], string_arg);
-		/*printf("%s\n", res[0]);*/
-		/*printf("%s\n", string_arg);*/
 
 		int i;
 		for (i = 0; i < path_depth; i++)
-		{
 			res[i] = stripChars(res[i], "\n\\ ");
-			/*printf("res[%d]: %s\n", i, res[i]);*/
-		}
-		/*printf("Size: %d\n\n\n", path_depth);*/
 
 		if (strcmp(res[0], "init") == 0)
 			init();
