@@ -187,85 +187,53 @@ start_shell(void)
 		/*printf("Size: %d\n\n\n", path_depth);*/
 
 		if (strcmp(res[0], "init") == 0)
-		{
 			init();
-		}
 
 		if (strcmp(res[0], "load") == 0)
-		{
 			load();
-		}
 
 		if (strcmp(res[0], "mkdir") == 0)
-		{
 			if (mkdir(res, path_depth))
 				printf("\tOH NOES! Either directory already exists or no more directory entries are available!\n");
-		}
 
 		if (strcmp(res[0], "create") == 0)
-		{
 			create(res, path_depth);
-		}
 
 		if (strcmp(res[0], "exit") == 0)
-		{
 			return 0;
-		}
 
 		if (strcmp(res[0], "help") == 0)
-		{
 			help();
-		}
 
 		if (strcmp(res[0], "ls") == 0)
-		{
 			ls(res, path_depth);
-		}
 
 		if (strcmp(res[0], "clear") == 0)
-		{
 			system("clear");
-		}
 
 		if (strcmp(res[0], "memprint") == 0)
-		{
 			system("hexdump -C fat.part");
-		}
 
 		if (strcmp(res[0], "doge") == 0)
-		{
 			doge();
-		}
 
 		if (strcmp(res[0], "paidefamilia") == 0)
-		{
 			pai_de_familia();
-		}
 
 		if (strcmp(res[0], "sergio") == 0)
-		{
 			sergio();
-		}
 
 		if (strcmp(res[0], "unlink") == 0)
-		{
 			unlink(res, path_depth);
-		}
 
 		if (strcmp(res[0], "write") == 0)
-		{
 			write(res, path_depth, string_arg);
-		}
 
 		if (strcmp(res[0], "read") == 0)
-		{
 			read(res, path_depth);
-		}
 
 		if (strcmp(res[0], "append") == 0)
-		{
 			append(res, path_depth, string_arg);
-		}
 
 		free_command_array(res, path_depth);
 	}
