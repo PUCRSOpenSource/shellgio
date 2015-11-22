@@ -35,7 +35,7 @@ doge(void)
 void
 sergio(void)
 {
-	char const* const fileName = "sergio.txt";
+	char const* const fileName = "data/sergio.txt";
 	FILE* file = fopen(fileName, "r");
 	char line[256];
 
