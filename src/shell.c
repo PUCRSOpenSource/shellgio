@@ -160,11 +160,11 @@ start_shell(void)
 	{
 		if (!file_exists("fat.part"))
 			printf("\e[1;31mFILE SYSTEM NOT FOUND, USE init\e[0m\n");
+		else
+			if (!g_fat_loaded)
+				printf("\e[1;31mFAT NOT LOADED, USE load\e[0m\n");
 
-		if (!g_fat_loaded)
-			printf("\e[1;31mFAT NOT LOADED, USE load\e[0m\n");
-
-		printf("Super Shell 2000$ ");
+		printf("Super \e[0;33mShellgio\e[0m \e[1;32m2000\e[0m $ ");
 		char command[4096];
 		fgets(command,96,stdin);
 

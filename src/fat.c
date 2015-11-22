@@ -319,10 +319,9 @@ ls(char** path, int size)
 int
 unlink_fat(int address)
 {
-	if (fat[address] <= 0)
+	if (fat[address] == 0xffff)
 	{
-		fat[address] = 0;
-		update_fat();
+		set_fat_address(address, 0);
 		return 1;
 	}
 	int next_hop = fat[address];
