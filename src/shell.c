@@ -52,7 +52,7 @@ pai_de_familia(void)
 }
 
 static int
-file_exists(const char * filename)
+file_exists(const char* filename)
 {
 	FILE* file = fopen(filename, "r");
 	if (file)
@@ -140,6 +140,18 @@ stripChars(const char *string, const char *chars)
 	return newstr;
 }
 
+static char*
+parse_string_command(char* command, char* string)
+{
+	char* p   = strtok (command, "\"");
+	char* aux = strtok(NULL, "\"");
+
+	if (aux)
+		while((*string++=*aux++));
+
+	return p;
+}
+
 int
 start_shell(void)
 {
@@ -158,6 +170,11 @@ start_shell(void)
 
 		int path_depth = 0;
 		char** res = parse_command(command, &path_depth);
+
+		char* string_arg = malloc(sizeof(char)*4096);
+		res[0] = parse_string_command(res[0], string_arg);
+		/*printf("%s\n", res[0]);*/
+		/*printf("%s\n", string_arg);*/
 
 		int i;
 		for (i = 0; i < path_depth; i++)
