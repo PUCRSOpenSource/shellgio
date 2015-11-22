@@ -107,6 +107,7 @@ help(void)
 	printf("doge                                     - prints doge\n");
 	printf("sergio                                   - prints sergio's picture\n");
 	printf("paidefamilia                             - prints the most amazing youtube link ever\n");
+	printf("clear                                    - clears the screen\n");
 	printf("init                                     - initialize file system, format disk\n");
 	printf("load                                     - load file allocation table\n");
 	printf("ls [/caminho/diretorio]                  - list directory\n");
