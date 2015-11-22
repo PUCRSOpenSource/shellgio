@@ -392,10 +392,11 @@ append(char** path, int size, char* string)
 			break;
 	}
 
+	int z = 0;
 	int j;
-	for (j = i; j < strlen(string) + 1; j++)
+	for (j = i; z < strlen(string) + 1; j++)
 	{
-		cluster->data[j] = string[j];
+		cluster->data[j] = string[z++];
 	}
 
 	save_data(address, *cluster);

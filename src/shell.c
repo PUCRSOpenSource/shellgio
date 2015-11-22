@@ -250,6 +250,21 @@ start_shell(void)
 			unlink(res, path_depth);
 		}
 
+		if (strcmp(res[0], "write") == 0)
+		{
+			write(res, path_depth, string_arg);
+		}
+
+		if (strcmp(res[0], "read") == 0)
+		{
+			read(res, path_depth);
+		}
+
+		if (strcmp(res[0], "append") == 0)
+		{
+			append(res, path_depth, string_arg);
+		}
+
 		free_command_array(res, path_depth);
 	}
 
