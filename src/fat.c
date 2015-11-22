@@ -362,3 +362,54 @@ unlink(char** path, int size)
 	save_data(prev_address, *prev_cluster);
 	return 0;
 }
+
+int
+write(char** path, int size, char* string)
+{
+	int address = load_address_from_path(path + 1, size, ROOT_ADDRESS);
+	union data_cluster* cluster = load_cluster(address);
+
+	int i;
+	for (i = 0; i < strlen(string) + 1; i++)
+	{
+		cluster->data[i] = string[i];
+	}
+	save_data(address, *cluster);
+
+	return 0;
+}
+
+int
+append(char** path, int size, char* string)
+{
+	int address = load_address_from_path(path + 1, size, ROOT_ADDRESS);
+	union data_cluster* cluster = load_cluster(address);
+
+	int i;
+	for (i = 0; i < BLOCK_SIZE + 1; i++)
+	{
+		if (cluster->data[i] == 0)
+			break;
+	}
+
+	int j;
+	for (j = i; j < strlen(string) + 1; j++)
+	{
+		cluster->data[j] = string[j];
+	}
+
+	save_data(address, *cluster);
+	
+	return 0;
+}
+
+int
+read(char** path, int size)
+{
+	int address = load_address_from_path(path + 1, size, ROOT_ADDRESS);
+	union data_cluster* cluster = load_cluster(address);
+
+	printf("%s\n", cluster->data);
+
+	return 0;
+}
