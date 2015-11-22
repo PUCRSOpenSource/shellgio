@@ -103,16 +103,20 @@ free_command_array(char** command, int size)
 void
 help(void)
 {
-	printf("init                       - initialize file system, format disk\n");
-	printf("load                       - load file allocation table\n");
-	printf("ls [/caminho/diretorio]    - list directory\n");
-	printf("mkdir [/caminho/diretorio] - make directory\n");
-	printf("rmdir [/caminho/diretorio] - remove directory\n");
-	printf("create [/caminho/arquivo]  - create file\n");
-	printf("rm [/caminho/arquivo]      - remove file\n");
-	printf("write  [/caminho/arquivo]  - write data in file\n");
-	printf("cat [/caminho/arquivo]     - concatenate files and print on the standard output\n");
-	printf("exit                       - exit shell\n");
+	printf("doge                                   - prints doge\n");
+	printf("sergio                                 - prints sergio's picture\n");
+	printf("paidefamilia                           - prints the most amazing youtube link ever\n");
+	printf("init                                   - initialize file system, format disk\n");
+	printf("load                                   - load file allocation table\n");
+	printf("ls [/caminho/diretorio]                - list directory\n");
+	printf("mkdir [/caminho/diretorio]             - make directory\n");
+	printf("rmdir [/caminho/diretorio]             - remove directory\n");
+	printf("create [/caminho/arquivo]              - create file\n");
+	printf("rm [/caminho/arquivo]                  - remove file\n");
+	printf("write \"STRING\" [/caminho/arquivo]    - write data in file\n");
+	printf("append \"STRING\"  [/caminho/arquivo]  - write data in file\n");
+	printf("cat [/caminho/arquivo]                 - concatenate files and print on the standard output\n");
+	printf("exit                                   - exit shell\n");
 }
 
 static char*
