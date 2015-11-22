@@ -371,12 +371,22 @@ write(char** path, int size, char* string)
 	int address = load_address_from_path(path + 1, size, ROOT_ADDRESS);
 	union data_cluster* cluster = load_cluster(address);
 
+	int parent_addr = load_address_from_path(path + 1, size - 1, ROOT_ADDRESS);
+	union data_cluster* parent = load_cluster(parent_addr);
+
 	int i;
 	for (i = 0; i < strlen(string) + 1; i++)
 	{
 		cluster->data[i] = string[i];
 	}
 	save_data(address, *cluster);
+
+	for (i = 0; i < BLOCK_SIZE / sizeof(dir_entry_t); i++)
+	{
+		if ( strcmp((const char*)parent->dir[i].filename, path[size - 1]) == 0 )
+			parent->dir[i].size = strlen(string) * sizeof(char) + 1; // +1 for \0
+	}
+	save_data(parent_addr, *parent);
 
 	return 0;
 }
