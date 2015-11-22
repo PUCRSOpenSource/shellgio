@@ -304,10 +304,10 @@ ls(char** path, int size)
 	for (i = 0; i < BLOCK_SIZE / sizeof(dir_entry_t); i++)
 	{
 		if (cluster->dir[i].attributes == 1)
-			printf("\tdir  %s\n", cluster->dir[i].filename);
+			printf("\t%4dB dir  %s\n", cluster->dir[i].size, cluster->dir[i].filename);
 
 		if (cluster->dir[i].attributes == 2)
-			printf("\tfile %s\n", cluster->dir[i].filename);
+			printf("\t%4dB file %s\n", cluster->dir[i].size, cluster->dir[i].filename);
 	}
 
 	free(cluster);
