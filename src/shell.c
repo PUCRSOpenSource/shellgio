@@ -38,6 +38,18 @@ pai_de_familia(void)
 	printf("Pai de Família em Japonês - https://www.youtube.com/watch?v=CKuP0c9lGBM\n");
 }
 
+static int
+file_exists(const char * filename)
+{
+	FILE* file = fopen(filename, "r");
+	if (file)
+	{
+		fclose(file);
+		return 1;
+	}
+	return 0;
+}
+
 static char**
 parse_command(char* str, int* depth)
 {
@@ -73,30 +85,6 @@ free_command_array(char** command, int size)
 	for (i = 0; i < size; i++)
 		free(command[i]);
 	free(command);
-}
-
-static char*
-ltrim(char* s)
-{
-	if(s==NULL)
-	{
-		return s;
-	}
-	while(isspace(*s)) s++;
-	return s;
-}
-
-static char*
-rtrim(char* s)
-{
-	if(s==NULL)
-	{
-		return s;
-	}
-	char* back = s + strlen(s);
-	while(isspace(*--back));
-	*(back+1) = '\0';
-	return s;
 }
 
 void
@@ -139,8 +127,12 @@ start_shell(void)
 {
 	while (1)
 	{
+		if (!file_exists("fat.part"))
+			printf("\e[1;31mFILE SYSTEM NOT FOUND, USE init\e[0m\n");
+
 		if (!g_fat_loaded)
-			printf("\e[1;31mFAT NOT LOADED\e[0m\n");
+			printf("\e[1;31mFAT NOT LOADED, USE load\e[0m\n");
+
 		printf("Super Shell 2000$ ");
 		char command[4096];
 		fgets(command,96,stdin);
@@ -156,8 +148,6 @@ start_shell(void)
 			res[i] = stripChars(res[i], "\n\\ ");
 		}
 		/*printf("Size: %d\n\n\n", path_depth);*/
-
-		res[0] = rtrim(ltrim(res[0]));
 
 		if (strcmp(res[0], "init") == 0)
 		{
