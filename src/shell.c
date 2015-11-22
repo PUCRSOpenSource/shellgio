@@ -117,6 +117,7 @@ help(void)
 	printf("write [\"STRING\"] [/caminho/arquivo]      - write data in file\n");
 	printf("append [\"STRING\"]  [/caminho/arquivo]    - write data in file\n");
 	printf("read [/caminho/arquivo]                  - concatenate files and print on the standard output\n");
+	printf("memprint                                 - prints filesystem memory dump on the screen\n");
 	printf("exit                                     - exit shell\n");
 }
 
