@@ -210,7 +210,7 @@ start_shell(void)
 
 		if (strcmp(res[0], "memprint") == 0)
 		{
-			system("hexdump fat.part");
+			system("hexdump -C fat.part");
 		}
 
 		if (strcmp(res[0], "doge") == 0)
