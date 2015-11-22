@@ -36,5 +36,9 @@ int mkdir(char** path, int size);
 int ls(char** path, int size);
 int create(char** path, int size);
 int unlink(char** path, int size);
+int write(char** path, int size, char* string);
+int read(char** path, int size);
+int append(char** path, int size, char* string);
+
 
 #endif /* FAT_H */
