@@ -26,12 +26,5 @@ clean:
 	rm -f $(ODIR)/*.o
 	rm -rf main
 
-ifeq ($(shell uname), Darwin)
 run: main
 	./main
-	hexdump -x fat.part
-else
-run: main
-	./main
-	hexdump fat.part
-endif
