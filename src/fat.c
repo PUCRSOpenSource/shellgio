@@ -397,22 +397,27 @@ append(char** path, int size, char* string)
 	int address = load_address_from_path(path + 1, size, ROOT_ADDRESS);
 	union data_cluster* cluster = load_cluster(address);
 
-	int i;
-	for (i = 0; i < BLOCK_SIZE + 1; i++)
-	{
-		if (cluster->data[i] == 0)
+	int eof;
+	for (eof = 0; eof < BLOCK_SIZE + 1; eof++)
+		if (cluster->data[eof] == 0)
 			break;
-	}
 
-	int z = 0;
-	int j;
-	for (j = i; z < strlen(string) + 1; j++)
-	{
-		cluster->data[j] = string[z++];
-	}
+	int i;
+	for (i = 0; i < strlen(string) + 1; i++)
+		cluster->data[eof++] = string[i];
 
 	save_data(address, *cluster);
+
+	int parent_addr = load_address_from_path(path + 1, size - 1, ROOT_ADDRESS);
+	union data_cluster* parent = load_cluster(parent_addr);
 	
+	for (i = 0; i < BLOCK_SIZE / sizeof(dir_entry_t); i++)
+	{
+		if ( strcmp((const char*)parent->dir[i].filename, path[size - 1]) == 0 )
+			parent->dir[i].size = parent->dir[i].size + strlen(string) * sizeof(char);
+	}
+	save_data(parent_addr, *parent);
+
 	return 0;
 }
 
