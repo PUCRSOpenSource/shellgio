@@ -70,7 +70,8 @@ parse_command(char* str, int* depth)
 	char*  p    = strtok (str, "/");
 	int n_spaces = 0;
 
-	while (p) {
+	while (p)
+	{
 		res = realloc (res, sizeof (char*) * ++n_spaces);
 
 		if (res == NULL)
@@ -103,20 +104,20 @@ free_command_array(char** command, int size)
 void
 help(void)
 {
-	printf("doge                                   - prints doge\n");
-	printf("sergio                                 - prints sergio's picture\n");
-	printf("paidefamilia                           - prints the most amazing youtube link ever\n");
-	printf("init                                   - initialize file system, format disk\n");
-	printf("load                                   - load file allocation table\n");
-	printf("ls [/caminho/diretorio]                - list directory\n");
-	printf("mkdir [/caminho/diretorio]             - make directory\n");
-	printf("rmdir [/caminho/diretorio]             - remove directory\n");
-	printf("create [/caminho/arquivo]              - create file\n");
-	printf("rm [/caminho/arquivo]                  - remove file\n");
-	printf("write \"STRING\" [/caminho/arquivo]    - write data in file\n");
-	printf("append \"STRING\"  [/caminho/arquivo]  - write data in file\n");
-	printf("cat [/caminho/arquivo]                 - concatenate files and print on the standard output\n");
-	printf("exit                                   - exit shell\n");
+	printf("doge                                     - prints doge\n");
+	printf("sergio                                   - prints sergio's picture\n");
+	printf("paidefamilia                             - prints the most amazing youtube link ever\n");
+	printf("init                                     - initialize file system, format disk\n");
+	printf("load                                     - load file allocation table\n");
+	printf("ls [/caminho/diretorio]                  - list directory\n");
+	printf("mkdir [/caminho/diretorio]               - make directory\n");
+	printf("rmdir [/caminho/diretorio]               - remove directory\n");
+	printf("create [/caminho/arquivo]                - create file\n");
+	printf("rm [/caminho/arquivo]                    - remove file\n");
+	printf("write [\"STRING\"] [/caminho/arquivo]      - write data in file\n");
+	printf("append [\"STRING\"]  [/caminho/arquivo]    - write data in file\n");
+	printf("read [/caminho/arquivo]                  - concatenate files and print on the standard output\n");
+	printf("exit                                     - exit shell\n");
 }
 
 static char*
@@ -161,8 +162,8 @@ start_shell(void)
 		int i;
 		for (i = 0; i < path_depth; i++)
 		{
-			/*printf("res[%d]: %s\n", i, res[i]);*/
 			res[i] = stripChars(res[i], "\n\\ ");
+			/*printf("res[%d]: %s\n", i, res[i]);*/
 		}
 		/*printf("Size: %d\n\n\n", path_depth);*/
 
