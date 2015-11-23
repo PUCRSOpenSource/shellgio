@@ -367,6 +367,7 @@ unlink(char** path, int size)
 int
 write(char** path, int size, char* string)
 {
+	// more than 1 cluster
 	if (strlen(string) + 1 > BLOCK_SIZE)
 	{
 		int num_clusters = ((strlen(string) + 1) / BLOCK_SIZE) + 1;
@@ -426,7 +427,7 @@ write(char** path, int size, char* string)
 		}
 		save_data(parent_addr, *parent);
 	}
-	else
+	else //will only take 1 cluster
 	{
 		int address = load_address_from_path(path + 1, size, ROOT_ADDRESS);
 		union data_cluster* cluster = load_cluster(address);
