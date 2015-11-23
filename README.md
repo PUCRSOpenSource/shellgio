@@ -1,3 +1,10 @@
+Nomes:
+
+* [Daniel Amarante](https://github.com/amarantedaniel)
+* [Matthias Nunes](https://github.com/execb5)
+
+---
+
 # Super Shellgio 2000
 
 Vocês está cansado de usar seu sistemas de arquivos ou shell e ele não
