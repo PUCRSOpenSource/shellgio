@@ -458,6 +458,12 @@ int
 append(char** path, int size, char* string)
 {
 	int address = load_address_from_path(path + 1, size, ROOT_ADDRESS);
+
+	while (fat[address] != 0xffff)
+	{
+		address = fat[address];
+	}
+
 	union data_cluster* cluster = load_cluster(address);
 
 	int eof;
@@ -467,7 +473,19 @@ append(char** path, int size, char* string)
 
 	int i;
 	for (i = 0; i < strlen(string) + 1; i++)
+	{
 		cluster->data[eof++] = string[i];
+		if (eof == BLOCK_SIZE)
+		{
+			save_data(address, *cluster);
+			int next_addr = get_free_address();
+			set_fat_address(address, next_addr);
+			set_fat_address(next_addr, 0xffff);
+			address = next_addr;
+			cluster = load_cluster(address);
+			eof = 0;
+		}
+	}
 
 	save_data(address, *cluster);
 
@@ -477,7 +495,7 @@ append(char** path, int size, char* string)
 	for (i = 0; i < BLOCK_SIZE / sizeof(dir_entry_t); i++)
 	{
 		if ( strcmp((const char*)parent->dir[i].filename, path[size - 1]) == 0 )
-			parent->dir[i].size = parent->dir[i].size + strlen(string) * sizeof(char);
+			parent->dir[i].size = parent->dir[i].size + strlen(string) * sizeof(char) + 1;
 	}
 	save_data(parent_addr, *parent);
 
