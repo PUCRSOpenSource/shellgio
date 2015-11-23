@@ -375,16 +375,21 @@ write(char** path, int size, char* string)
 
 		int* addresses = malloc(sizeof(int) * num_clusters);
 
+		// getting the first cluster
+		int address = load_address_from_path(path + 1, size, ROOT_ADDRESS);
+		union data_cluster* cluster = load_cluster(address);
+
+		addresses[0] = address;
+		clusters[0] = *cluster;
+
 		//Writing positions on the fat
-		int first_complete = 0;
 		int i;
-		for (i = num_clusters - 1; i >= 0; i--)
+		for (i = 1; i < num_clusters; i++)
 		{
 			addresses[i] = get_free_address();
-			int prev_addr = first_complete ? addresses[i + 1] : 0xffff;
-			first_complete = 1;
-			set_fat_address(addresses[i], prev_addr);
+			set_fat_address(addresses[i - 1], addresses[i]);
 		}
+		set_fat_address(addresses[i - 1], 0xffff);
 
 		// i controls clusters
 		// j controls cluster size
@@ -420,8 +425,6 @@ write(char** path, int size, char* string)
 				parent->dir[i].size = strlen(string) * sizeof(char) + 1; // +1 for \0
 		}
 		save_data(parent_addr, *parent);
-
-		return 0;
 	}
 	else
 	{
@@ -444,9 +447,9 @@ write(char** path, int size, char* string)
 				parent->dir[i].size = strlen(string) * sizeof(char) + 1; // +1 for \0
 		}
 		save_data(parent_addr, *parent);
-
-		return 0;
 	}
+
+	return 0;
 }
 
 int
