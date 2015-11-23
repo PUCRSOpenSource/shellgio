@@ -391,6 +391,91 @@ write(char** path, int size, char* string)
 }
 
 int
+write2(char** path, int size, char* string)
+{
+	if (strlen(string) + 1 > BLOCK_SIZE)
+	{
+		int num_clusters = ((strlen(string) + 1) / BLOCK_SIZE) + 1;
+
+		union data_cluster* clusters = malloc(BLOCK_SIZE * num_clusters);
+
+		int* addresses = malloc(sizeof(int) * num_clusters);
+
+		//Writing positions on the fat
+		int first_complete = 0;
+		int i;
+		for (i = num_clusters - 1; i >= 0; i--)
+		{
+			addresses[i] = get_free_address();
+			int prev_addr = first_complete ? addresses[i + 1] : 0xffff;
+			first_complete = 1;
+			set_fat_address(addresses[i], prev_addr);
+		}
+
+		// i controls clusters
+		// j controls cluster size
+		// k controls how much of the string was copied
+		int k = 0;
+		for (i = 0; i < num_clusters; i++)
+		{
+			int j = 0;
+			for (j = 0; j < BLOCK_SIZE; j++)
+			{
+				clusters[i].data[j] = string[k++];
+				if (k >= strlen(string) + 1)
+					break;
+			}
+			if (k >= strlen(string) + 1)
+				break;
+		}
+
+		//save all clusters
+		for (i = 0; i < num_clusters; i++)
+		{
+			save_data(addresses[i], clusters[i]);
+		}
+
+		//get parent
+		int parent_addr = load_address_from_path(path + 1, size - 1, ROOT_ADDRESS);
+		union data_cluster* parent = load_cluster(parent_addr);
+
+		//set file size
+		for (i = 0; i < BLOCK_SIZE / sizeof(dir_entry_t); i++)
+		{
+			if ( strcmp((const char*)parent->dir[i].filename, path[size - 1]) == 0 )
+				parent->dir[i].size = strlen(string) * sizeof(char) + 1; // +1 for \0
+		}
+		save_data(parent_addr, *parent);
+
+		return 0;
+	}
+	else
+	{
+		int address = load_address_from_path(path + 1, size, ROOT_ADDRESS);
+		union data_cluster* cluster = load_cluster(address);
+
+		int parent_addr = load_address_from_path(path + 1, size - 1, ROOT_ADDRESS);
+		union data_cluster* parent = load_cluster(parent_addr);
+
+		int i;
+		for (i = 0; i < strlen(string) + 1; i++)
+		{
+			cluster->data[i] = string[i];
+		}
+		save_data(address, *cluster);
+
+		for (i = 0; i < BLOCK_SIZE / sizeof(dir_entry_t); i++)
+		{
+			if ( strcmp((const char*)parent->dir[i].filename, path[size - 1]) == 0 )
+				parent->dir[i].size = strlen(string) * sizeof(char) + 1; // +1 for \0
+		}
+		save_data(parent_addr, *parent);
+
+		return 0;
+	}
+}
+
+int
 append(char** path, int size, char* string)
 {
 	int address = load_address_from_path(path + 1, size, ROOT_ADDRESS);

@@ -167,7 +167,7 @@ start_shell(void)
 
 		printf("Super \e[0;33mShellgio\e[0m \e[1;32m2000\e[0m $ ");
 		char command[4096];
-		fgets(command,96,stdin);
+		fgets(command,4096,stdin);
 
 
 		int path_depth = 0;
@@ -221,7 +221,7 @@ start_shell(void)
 			unlink(res, path_depth);
 
 		if (strcmp(res[0], "write") == 0)
-			write(res, path_depth, string_arg);
+			write2(res, path_depth, string_arg);
 
 		if (strcmp(res[0], "read") == 0)
 			read(res, path_depth);
