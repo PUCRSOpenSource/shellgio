@@ -28,3 +28,6 @@ clean:
 
 run: main
 	./main
+
+testLeak: main
+	valgrind --leak-check=full --show-leak-kinds=all -v ./$^
