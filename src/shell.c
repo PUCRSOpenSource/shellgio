@@ -221,7 +221,7 @@ start_shell(void)
 			unlink(res, path_depth);
 
 		if (strcmp(res[0], "write") == 0)
-			write2(res, path_depth, string_arg);
+			write(res, path_depth, string_arg);
 
 		if (strcmp(res[0], "read") == 0)
 			read(res, path_depth);
