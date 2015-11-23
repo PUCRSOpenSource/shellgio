@@ -1,3 +1,63 @@
+# Super Shellgio 2000
+
+Vocês está cansado de usar seu sistemas de arquivos ou shell e ele não
+funcionar?
+
+### Seus problemas acabaram!
+
+Chegou o **Super Shellgio 2000**!
+
+O shell + sistema de arquivos que faltava em sua vida! Onde anotar uma lista de
+supermercado se torna uma tarefa *extremamente* simples! Vamos ver funcionando
+para esse exemplo!
+
+Ex: Lista de supermercado
+
+* **Vida Real**
+	* Pegar um papel
+	* Pegar uma caneta
+	* Anotar
+
+Horrivelmente complicado! Vamos ver agora na simplicidade do **Super Shellgio
+2000**:
+
+* **Super Shellgio 2000**
+	* `./main` - Começa o programa
+		* `init` - formata o disco caso não tenha sido feito ainda!
+		* `load` - carrega a FAT se o init já tivesse sido executado alguma vez!
+	* `create /<NOME_DA_LISTA>` - cria um arquivo para escrever!
+	* `write "<CONTEUDO>" /<NOME_DA_LISTA>` - escreve na lista!
+	* `exit` - sai do programa!
+
+Agora vocês pode ir ao supermercado sabendo que sua lista está salva na
+segurança de seu computador, olha que simples!
+
+## Outros comandos
+
+* `mkdir /<NOME_DO_DIRETORIO>` - criar uma entrada de diretório
+* `unlink /<NOME_DE_DIRETORIO_OU_ARQUIVO>` - remover arquivo ou diretório
+* `append "<CONTEUDO>" /<NOME_DO_ARQUIVO` - adiciona mais coisas em um arquivo
+	que já existe
+* `ls /<NOME_DO_DIRETORIO>`  - lista todos arquivos ou diretórios que existem
+	naquele diretório
+* `read /<NOME_DO_ARQUIVO>` - mostra na tela o conteudo de um arquivo
+
+## Comandos secretos
+
+Conteúdo **exclusivo** do **Super Shellgio 2000**!
+
+* `doge`
+* `sergio`
+* `paidefamilia`
+
+Descobrir o que esses comandos fazem será deixado como exercício ao leitor.
+
+## Instalação
+
+Apenas execute `make` na raiz do projeto.
+
+---
+
 # Sistemas Operacionais - Trabalho Prático II
 
 #### Sistema de arquivos FAT e um simples shell
