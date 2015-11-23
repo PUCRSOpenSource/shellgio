@@ -441,6 +441,7 @@ write(char** path, int size, char* string)
 			cluster->data[i] = string[i];
 		}
 		save_data(address, *cluster);
+		set_fat_address(address, 0xffff);
 
 		for (i = 0; i < BLOCK_SIZE / sizeof(dir_entry_t); i++)
 		{
