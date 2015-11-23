@@ -367,89 +367,38 @@ unlink(char** path, int size)
 int
 write(char** path, int size, char* string)
 {
-	// more than 1 cluster
-	if (strlen(string) + 1 > BLOCK_SIZE)
+	int address = load_address_from_path(path + 1, size, ROOT_ADDRESS);
+	union data_cluster* cluster = load_cluster(address);
+
+	int i;
+	int k = 0;
+	for (i = 0; i < strlen(string) + 1; i++)
 	{
-		int num_clusters = ((strlen(string) + 1) / BLOCK_SIZE) + 1;
-
-		union data_cluster* clusters = malloc(BLOCK_SIZE * num_clusters);
-
-		int* addresses = malloc(sizeof(int) * num_clusters);
-
-		// getting the first cluster
-		int address = load_address_from_path(path + 1, size, ROOT_ADDRESS);
-		union data_cluster* cluster = load_cluster(address);
-
-		addresses[0] = address;
-		clusters[0] = *cluster;
-
-		//Writing positions on the fat
-		int i;
-		for (i = 1; i < num_clusters; i++)
+		cluster->data[k++] = string[i];
+		if (k == BLOCK_SIZE)
 		{
-			addresses[i] = get_free_address();
-			set_fat_address(addresses[i - 1], addresses[i]);
+			save_data(address, *cluster);
+			int next_addr = get_free_address();
+			set_fat_address(address, next_addr);
+			set_fat_address(next_addr, 0xffff);
+			address = next_addr;
+			cluster = load_cluster(address);
+			k = 0;
 		}
-		set_fat_address(addresses[i - 1], 0xffff);
-
-		// i controls clusters
-		// j controls cluster size
-		// k controls how much of the string was copied
-		int k = 0;
-		for (i = 0; i < num_clusters; i++)
-		{
-			int j = 0;
-			for (j = 0; j < BLOCK_SIZE; j++)
-			{
-				clusters[i].data[j] = string[k++];
-				if (k >= strlen(string) + 1)
-					break;
-			}
-			if (k >= strlen(string) + 1)
-				break;
-		}
-
-		//save all clusters
-		for (i = 0; i < num_clusters; i++)
-		{
-			save_data(addresses[i], clusters[i]);
-		}
-
-		//get parent
-		int parent_addr = load_address_from_path(path + 1, size - 1, ROOT_ADDRESS);
-		union data_cluster* parent = load_cluster(parent_addr);
-
-		//set file size
-		for (i = 0; i < BLOCK_SIZE / sizeof(dir_entry_t); i++)
-		{
-			if ( strcmp((const char*)parent->dir[i].filename, path[size - 1]) == 0 )
-				parent->dir[i].size = strlen(string) * sizeof(char) + 1; // +1 for \0
-		}
-		save_data(parent_addr, *parent);
 	}
-	else //will only take 1 cluster
+	set_fat_address(address, 0xffff);
+
+	save_data(address, *cluster);
+
+	int parent_addr = load_address_from_path(path + 1, size - 1, ROOT_ADDRESS);
+	union data_cluster* parent = load_cluster(parent_addr);
+	
+	for (i = 0; i < BLOCK_SIZE / sizeof(dir_entry_t); i++)
 	{
-		int address = load_address_from_path(path + 1, size, ROOT_ADDRESS);
-		union data_cluster* cluster = load_cluster(address);
-
-		int parent_addr = load_address_from_path(path + 1, size - 1, ROOT_ADDRESS);
-		union data_cluster* parent = load_cluster(parent_addr);
-
-		int i;
-		for (i = 0; i < strlen(string) + 1; i++)
-		{
-			cluster->data[i] = string[i];
-		}
-		save_data(address, *cluster);
-		set_fat_address(address, 0xffff);
-
-		for (i = 0; i < BLOCK_SIZE / sizeof(dir_entry_t); i++)
-		{
-			if ( strcmp((const char*)parent->dir[i].filename, path[size - 1]) == 0 )
-				parent->dir[i].size = strlen(string) * sizeof(char) + 1; // +1 for \0
-		}
-		save_data(parent_addr, *parent);
+		if ( strcmp((const char*)parent->dir[i].filename, path[size - 1]) == 0 )
+			parent->dir[i].size = strlen(string) * sizeof(char) + 1;
 	}
+	save_data(parent_addr, *parent);
 
 	return 0;
 }
