@@ -489,6 +489,12 @@ read(char** path, int size)
 	int address = load_address_from_path(path + 1, size, ROOT_ADDRESS);
 	union data_cluster* cluster = load_cluster(address);
 
+	while (fat[address] != 0xffff)
+	{
+		printf("%s", cluster->data);
+		address = fat[address];
+		cluster = load_cluster(address);
+	}
 	printf("%s\n", cluster->data);
 
 	return 0;
