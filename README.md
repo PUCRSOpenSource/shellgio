@@ -98,7 +98,7 @@ diretório *root* possui um conjunto de entradas de diretório que podem apontar
 para outros diretórios ou arquivos.  Inicialmente, as entradas de diretório
 devem estar livres, inicializando-se todas as estruturas com 0x00.
 
-![Sistema de Arquivos e FAT](https://bytebucket.org/execb5/t2sisop/raw/e70cbd42151726a677350d82e044f49ca7cc533d/img/fat.png?token=cbc7a1928f754895aea2cbde47a3cffda457beb4)
+![Sistema de Arquivos e FAT](https://raw.githubusercontent.com/execb5/shellgio/master/data/fat.png)
 
 Após a FAT e o diretório *root*, encontra-se a seção de dados contendo o
 restante dos clusters. Outros diretórios (e sub-diretórios) são definidos como
