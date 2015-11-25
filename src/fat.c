@@ -104,9 +104,12 @@ load_address_from_path(char** path, int size, int address)
 	{
 		if (strcmp((const char*)cluster->dir[i].filename, (const char*) *path) == 0)
 		{
-			return load_address_from_path(++path, size - 1, cluster->dir[i].first_block);
+			int aux = load_address_from_path(++path, size - 1, cluster->dir[i].first_block);
+			free(cluster);
+			return aux;
 		}
 	}
+	free(cluster);
 	return -1;
 }
 
@@ -466,6 +469,8 @@ read(char** path, int size)
 		cluster = load_cluster(address);
 	}
 	printf("%s\n", cluster->data);
+
+	free(cluster);
 
 	return 0;
 }
