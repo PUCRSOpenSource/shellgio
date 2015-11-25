@@ -393,6 +393,7 @@ write(char** path, int size, char* string)
 			set_fat_address(address, next_addr);
 			set_fat_address(next_addr, 0xffff);
 			address = next_addr;
+			free(cluster);
 			cluster = load_cluster(address);
 			k = 0;
 		}
@@ -400,6 +401,8 @@ write(char** path, int size, char* string)
 	set_fat_address(address, 0xffff);
 
 	save_data(address, *cluster);
+
+	free(cluster);
 
 	int parent_addr = load_address_from_path(path + 1, size - 1, ROOT_ADDRESS);
 	union data_cluster* parent = load_cluster(parent_addr);
@@ -410,6 +413,8 @@ write(char** path, int size, char* string)
 			parent->dir[i].size = strlen(string) * sizeof(char) + 1;
 	}
 	save_data(parent_addr, *parent);
+
+	free(parent);
 
 	return 0;
 }
