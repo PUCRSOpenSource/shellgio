@@ -447,7 +447,7 @@ append(char** path, int size, char* string)
 			set_fat_address(address, next_addr);
 			set_fat_address(next_addr, 0xffff);
 			address = next_addr;
-			/*free(cluster);*/
+			free(cluster);
 			cluster = load_cluster(address);
 			eof = 0;
 		}
@@ -455,7 +455,7 @@ append(char** path, int size, char* string)
 
 	save_data(address, *cluster);
 
-	/*free(cluster);*/
+	free(cluster);
 
 	int parent_addr = load_address_from_path(path + 1, size - 1, ROOT_ADDRESS);
 	union data_cluster* parent = load_cluster(parent_addr);
@@ -467,7 +467,7 @@ append(char** path, int size, char* string)
 	}
 	save_data(parent_addr, *parent);
 
-	/*free(parent);*/
+	free(parent);
 
 	return 0;
 }
