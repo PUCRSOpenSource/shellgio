@@ -112,9 +112,8 @@ help(void)
 	printf("load                                     - load file allocation table\n");
 	printf("ls [/caminho/diretorio]                  - list directory\n");
 	printf("mkdir [/caminho/diretorio]               - make directory\n");
-	printf("rmdir [/caminho/diretorio]               - remove directory\n");
+	printf("unlink [/caminho/file|dir]               - remove directory or file\n");
 	printf("create [/caminho/arquivo]                - create file\n");
-	printf("rm [/caminho/arquivo]                    - remove file\n");
 	printf("write [\"STRING\"] [/caminho/arquivo]      - write data in file\n");
 	printf("append [\"STRING\"]  [/caminho/arquivo]    - write data in file\n");
 	printf("read [/caminho/arquivo]                  - concatenate files and print on the standard output\n");
