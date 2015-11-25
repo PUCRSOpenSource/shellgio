@@ -358,6 +358,7 @@ unlink(char** path, int size)
 					prev_cluster->dir[i].attributes = 0;
 					unlink_fat(address);
 				}
+				free(cluster);
 			}
 			if (prev_cluster->dir[i].attributes == 2)
 			{
@@ -368,6 +369,9 @@ unlink(char** path, int size)
 		}
 	}
 	save_data(prev_address, *prev_cluster);
+
+	free(prev_cluster);
+
 	return 0;
 }
 
