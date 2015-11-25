@@ -214,6 +214,8 @@ create(char** path, int size)
 	}
 	save_data(cluster_address, *cluster);
 
+	free(cluster);
+
 	return 0;
 }
 
