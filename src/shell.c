@@ -122,8 +122,10 @@ help(void)
 }
 
 static char*
-stripChars(const char *string, const char *chars)
+stripChars(char* string, const char* chars)
 {
+	char* beginning = string;
+
 	char* newstr = malloc(strlen(string) + 1);
 
 	int counter = 0;
@@ -138,6 +140,8 @@ stripChars(const char *string, const char *chars)
 	}
 
 	newstr[counter] = 0;
+
+	free(beginning);
 	return newstr;
 }
 
@@ -193,7 +197,11 @@ start_shell(void)
 			create(res, path_depth);
 
 		if (strcmp(res[0], "exit") == 0)
+		{
+			free(string_arg);
+			free_command_array(res, path_depth);
 			return 0;
+		}
 
 		if (strcmp(res[0], "help") == 0)
 			help();
