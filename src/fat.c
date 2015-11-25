@@ -289,6 +289,8 @@ mkdir(char** path, int size)
 	zero_data_cluster(&new_file);
 	save_data(address, new_file);
 
+	free(cluster);
+
 	return 0;
 }
 
