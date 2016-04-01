@@ -406,7 +406,7 @@ write(char** path, int size, char* string)
 
 	int parent_addr = load_address_from_path(path + 1, size - 1, ROOT_ADDRESS);
 	union data_cluster* parent = load_cluster(parent_addr);
-	
+
 	for (i = 0; i < BLOCK_SIZE / sizeof(dir_entry_t); i++)
 	{
 		if ( strcmp((const char*)parent->dir[i].filename, path[size - 1]) == 0 )
@@ -459,7 +459,7 @@ append(char** path, int size, char* string)
 
 	int parent_addr = load_address_from_path(path + 1, size - 1, ROOT_ADDRESS);
 	union data_cluster* parent = load_cluster(parent_addr);
-	
+
 	for (i = 0; i < BLOCK_SIZE / sizeof(dir_entry_t); i++)
 	{
 		if ( strcmp((const char*)parent->dir[i].filename, path[size - 1]) == 0 )

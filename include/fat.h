@@ -18,7 +18,7 @@ typedef struct {
 	uint32_t size;
 } dir_entry_t;
 
- union data_cluster{
+union data_cluster {
 	dir_entry_t dir[BLOCK_SIZE / sizeof(dir_entry_t)];
 	uint8_t data[BLOCK_SIZE];
 };
